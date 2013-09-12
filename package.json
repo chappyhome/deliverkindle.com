@@ -4,8 +4,9 @@
     "version": "0.0.1",
     "private": true,
     "dependencies": {
-        "express": "3.x",
-        "xml2js" : "0.2.8",
-        "redis"  : "0.8.4"
+        "express"   : "3.x",
+        "elastical" : "0.0.12",
+        "redis"     : "0.8.4",
+        "ejs"       :  "0.8.4"
     }
 }
