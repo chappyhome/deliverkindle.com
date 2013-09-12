@@ -1,2 +1,6 @@
 node_modules/*
 epub_content/*
+sftp-config.json
+README.md
+cover/*
+epub/*
