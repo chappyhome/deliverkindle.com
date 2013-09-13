@@ -16,7 +16,7 @@ var	CALIBRE_ALL_BOOKS_SET = 'calibre_all_books_sort_set',
 	CALIBRE_ALL_BOOKS_CLICK_SORT_SET = 'calibre_all_books_click_sort_set',
 	//repository = "/root/all_book_library/Calibre/metadata.db",
 	watchPath = '/tmp/book';
-	root = p.join(__dirname, 'public/');
+	root = '/data/httpd/htdocs/public/';
 
 exports.searchBook = function(req, res) {
 	var term = req.params.q,
