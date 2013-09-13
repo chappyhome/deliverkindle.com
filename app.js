@@ -35,7 +35,7 @@ app.configure('development', function () {
 //app.get('/get_book_list/:page?', api.getBookList);
 //app.get('/get_category_list', api.data.getCategoryList);
 //app.get('/get_category_detail/:id', api.data.getCategoryDetail);
-app.get('/get_books_list/:startIndex?/:maxResults?', api.data.getRedisBookByIDs);
+app.get('/api/get_books_list/:startIndex?/:maxResults?', api.data.getRedisBookByIDs);
 app.get('/get_rank_books_list/:startIndex?/:maxResults?', api.data.getRedisRankBooks);
 app.get('/search_book/:q/:startIndex?/:maxResults?', api.data.searchBook);
 app.get('/cover/:id', api.data.getCoverPath);
