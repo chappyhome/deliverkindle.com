@@ -238,7 +238,7 @@ MyApp.LibraryApp = function(){
             _.each(res.items, function(item){
               var thumbnail = null;
               searchResults[searchResults.length] = new Book({
-                thumbnail: 'cover/' + item.id,
+                thumbnail: 'cover/' + item.path + '/cover_128_190.jpg',
                 title: item.title,
                 subtitle: item.title,
                 description: item.desc,
