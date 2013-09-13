@@ -42,7 +42,7 @@ app.get('/cover/:id', api.data.getCoverPath);
 app.get('/reader/:id', api.data.startReader);
 
 
-//update data test git
+//update data test git test2
 /*setTimeout(api.update.updateSqliteEPubPathToHash, 60000);
 setTimeout(api.update.updateSqliteToHashAndSet, 300000);
 setTimeout(api.update.updateConvertCover, 80000);
