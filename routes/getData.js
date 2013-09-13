@@ -80,7 +80,7 @@ exports.getRedisBookByIDs = function(req, res) {
 				json.push(JSON.parse(reply[i]));
 			}
 			output['totalItems'] = num;
-			output['items'] = (endpage >num) ? [] : json;
+			output['items'] = json;
 			res.send(output);
 		});
 	});
