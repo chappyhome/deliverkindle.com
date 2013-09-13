@@ -147,7 +147,7 @@ MyApp.LibraryApp = function(){
             _.each(res.items, function(item){
               var thumbnail = null;
               searchResults[searchResults.length] = new Book({
-                thumbnail: '/api/cover/' + item.id,
+                thumbnail: 'cover/' + item.id,
                 title: item.title,
                 subtitle: item.title,
                 description: item.desc,
@@ -191,7 +191,7 @@ MyApp.LibraryApp = function(){
             _.each(res.items, function(item){
               var thumbnail = null;
               searchResults[searchResults.length] = new Book({
-                thumbnail: '/api/cover/' + item.id,
+                thumbnail: 'cover/' + item.id,
                 title: item.title,
                 subtitle: item.title,
                 description: item.desc,
@@ -238,7 +238,7 @@ MyApp.LibraryApp = function(){
             _.each(res.items, function(item){
               var thumbnail = null;
               searchResults[searchResults.length] = new Book({
-                thumbnail: '/api/cover/' + item.id,
+                thumbnail: 'cover/' + item.id,
                 title: item.title,
                 subtitle: item.title,
                 description: item.desc,

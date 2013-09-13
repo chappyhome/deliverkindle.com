@@ -38,8 +38,8 @@ app.configure('development', function () {
 app.get('/api/get_books_list/:startIndex?/:maxResults?', api.data.getRedisBookByIDs);
 app.get('/api/get_rank_books_list/:startIndex?/:maxResults?', api.data.getRedisRankBooks);
 app.get('/api/search_book/:q/:startIndex?/:maxResults?', api.data.searchBook);
-app.get('/api/cover/:id', api.data.getCoverPath);
-app.get('/api/reader/:id', api.data.startReader);
+app.get('/cover/:id', api.data.getCoverPath);
+app.get('/reader/:id', api.data.startReader);
 
 
 //update data test git test2
