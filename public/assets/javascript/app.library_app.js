@@ -131,7 +131,7 @@ MyApp.LibraryApp = function(){
       var query = (this.page * this.maxResults)+'/' + (this.maxResults - 1);
       
       $.ajax({
-        url: 'http://www.deliverkindle.com/get_books_list/' + query,
+        url: '/get_books_list/' + query,
         dataType: 'json',
         data: '',
         success: function (res) {
@@ -175,7 +175,7 @@ MyApp.LibraryApp = function(){
       var query = (this.page * this.maxResults)+'/' + (this.maxResults - 1);
       
       $.ajax({
-        url: 'http://www.deliverkindle.com/get_rank_books_list/' + query,
+        url: '/get_rank_books_list/' + query,
         dataType: 'json',
         data: '',
         success: function (res) {
@@ -222,7 +222,7 @@ MyApp.LibraryApp = function(){
       var query = encodeURIComponent(searchTerm)+'/'+(this.page * this.maxResults)+'/' + this.maxResults;
       
       $.ajax({
-        url: 'http://www.deliverkindle.com/search_book/' + query,
+        url: '/search_book/' + query,
         dataType: 'json',
         data: '',
         success: function (res) {
