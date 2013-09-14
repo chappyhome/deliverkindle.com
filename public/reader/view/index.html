@@ -45,8 +45,7 @@
                   // list.push(json);
                   localStorage.setItem(idkey,JSON.stringify(list));
 
-                  //var book_detail_data_id = '<%= books_data_prefix %>' + "_" + <%= bookid %>;
-                  var book_detail_data_id = "aaaaaaaaaaaaaaaaaaaaaaa";
+                  var book_detail_data_id = '<%= books_data_prefix %>' + "_" + <%= bookid %>;
                   localStorage.setItem(book_detail_data_id, JSON.stringify(<%- row %>));
                 }
 
