@@ -37,7 +37,7 @@ MyApp.MenuView = Backbone.Marionette.View.extend({
   
   events: {
     'click #menu .js-menu-books': 'showLibraryApp',
-    'click #menu .js-menu-bookshelf': 'showBookShelfApp',
+    //'click #menu .js-menu-bookshelf': 'showBookShelfApp',
     'click #menu .js-menu-close': 'closeApp'
   },
   
