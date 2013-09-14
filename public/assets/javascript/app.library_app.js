@@ -181,7 +181,8 @@ MyApp.LibraryApp = function(){
            var books_data_prefix = "CalibreBookDetailDataList";
            var str = localStorage.getItem(list_key);
            var list = (str == null) ? [] :  JSON.parse(str);
-           var sub_list = list.slice(start, step);
+           var new_list = _.uniq(list);
+           var sub_list = new_list.slice(start, step);
            var totalItems = sub_list.length;
 
            console.log(sub_list);
