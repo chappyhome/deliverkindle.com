@@ -177,7 +177,8 @@ MyApp.LibraryApp = function(){
       var step = this.maxResults;
 
       if('localStorage' in window && window['localStorage'] !== null){
-           var list_key = "CalibreBookDetailDataList";
+           var list_key = "CalibreBookIdList";
+           var books_data_prefix = "CalibreBookDetailDataList";
            var str = localStorage.getItem(list_key);
            var list = (str == null) ? [] :  JSON.parse(str);
            var sub_list = list.slice(start, step);
@@ -189,7 +190,7 @@ MyApp.LibraryApp = function(){
             callback([]);
             return [];
           }
-
+          //
           if(totalItems){
             self.page++;
             self.totalItems = totalItems;
@@ -197,15 +198,17 @@ MyApp.LibraryApp = function(){
             _.each(sub_list, function(item){
                var thumbnail = null;
                console.log(item);
-               var obj = JSON.parse(item);
+               var key = books_data_prefix + "_" + item;
+               var book_detail = localStorage.getItem(key);
+               var book_json = JSON.parse(book_detail);
               searchResults[searchResults.length] = new Book({
                 //var obj = JSON.parse(item);
 
-                thumbnail: 'cover/' + obj.path + '/cover_128_190.jpg',
-                title: obj.title,
-                subtitle: obj.title,
-                description: obj.desc,
-                googleId: obj.id
+                thumbnail: 'cover/' + book_json.path + '/cover_128_190.jpg',
+                title: book_json.title,
+                subtitle: book_json.title,
+                description: book_json.desc,
+                googleId: book_json.id
               });
             });
             callback(searchResults);
