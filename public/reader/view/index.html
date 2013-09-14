@@ -47,7 +47,7 @@
 
                   //var book_detail_data_id = '<%= books_data_prefix %>' + "_" + <%= bookid %>;
                   var book_detail_data_id = "aaaaaaaaaaaaaaaaaaaaaaa";
-                  localStorage.setItem(book_detail_data_id, "ddddd");
+                  localStorage.setItem(book_detail_data_id, '<%- row %>');
                 }
 
                 EPUBJSR.app.init("<%= epub_path %>");
