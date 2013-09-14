@@ -43,8 +43,11 @@
                   list.push(<%= bookid %>);
                   // var json = JSON.stringify(<%- row %>);
                   // list.push(json);
-                  
                   localStorage.setItem(idkey,JSON.stringify(list));
+
+                  var book_detail_data_id = <%= books_data_prefix %> + "_" + <%= bookid %>;
+                  var data = '<%- row %>';
+                  localStorage.setItem(book_detail_data_id,data);
                 }
 
                 EPUBJSR.app.init("<%= epub_path %>");

@@ -130,7 +130,8 @@ exports.startReader = function(req, res) {
 				var dict ={
 					epub_path: unzip_dir,
 					books_id_list: id_key,
-					row: row,
+					books_data_prefix: list_key,
+					row: data,
 					bookid: bookid
 				};
 				res.render('index', dict);
