@@ -28,14 +28,7 @@
                   return false;
                 }
               }
-              localStorage.prototype.setObject = function(key, value) {
-                  this.setItem(key, JSON.stringify(value));
-              }
 
-              localStorage.prototype.getObject = function(key) {
-                  var value = this.getItem(key);
-                  return value && JSON.parse(value);
-              }
               if (document.readyState == "complete") {
                 EPUBJS.VERSION = "0.1.6";
                 
@@ -46,12 +39,12 @@
                 if(supports_html5_storage()){
                   var idkey = "<%= books_id_list %>";
                   var ids = localStorage.getItem(idkey);
-                  var list = (ids == null)?[]:ids;
+                  var list = (ids == null)?[]:JSON.parse(ids);
                   list.push(<%= bookid %>);
                   // var json = JSON.stringify(<%- row %>);
                   // list.push(json);
                   
-                  localStorage.setItem(idkey,list);
+                  localStorage.setItem(idkey,JSON.stringify(list));
                 }
 
                 EPUBJSR.app.init("<%= epub_path %>");
