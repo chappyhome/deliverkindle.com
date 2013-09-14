@@ -183,6 +183,8 @@ MyApp.LibraryApp = function(){
            var sub_list = list.slice(start, step);
            var totalItems = sub_list.length;
 
+           console.log(sub_list);
+
           if(totalItems == 0){
             callback([]);
             return [];
