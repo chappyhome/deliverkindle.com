@@ -118,12 +118,12 @@ exports.startReader = function(req, res) {
 	var bookid = req.params.id;
 	if(!bookid) return res.send(404);
 	redisClient.hget(CALIBRE_ALL_BOOKS_HASH, bookid, function(err, row){
-		console.log(row);
-		var real_epub_path = watchPath + "/" + row.path;
+		//console.log(row);
+		var real_epub_path = watchPath + "/" + row['path'];
 		console.log(real_epub_path);
 		fs.exists(real_epub_path, function(exists) {
 			if(exists){
-				var unzip_dir = "epub_content/" +row.path + "/";//CALIBRE_ALL_BOOKS_CLICK_HASH
+				var unzip_dir = "epub_content/" +row['path'] + "/";//CALIBRE_ALL_BOOKS_CLICK_HASH
 				//redisClient.hincrby(CALIBRE_ALL_BOOKS_CLICK_HASH, bookid, 1);
 				var hash_key = "CalibreBookDetailDataHash";
 				var list_key = "CalibreBookIdList";
