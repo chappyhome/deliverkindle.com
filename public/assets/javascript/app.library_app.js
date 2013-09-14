@@ -198,6 +198,7 @@ MyApp.LibraryApp = function(){
                var thumbnail = null;
               searchResults[searchResults.length] = new Book({
                 //var obj = JSON.parse(item);
+                console.log(item);
                 thumbnail: 'cover/' + item.path + '/cover_128_190.jpg',
                 title: item.title,
                 subtitle: item.title,
