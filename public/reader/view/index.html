@@ -39,7 +39,7 @@
                   var idkey = "<%= books_data_hash %>";
                   var str = localStorage.getItem(idkey);
                   var hash = (str == null) ? {} :  JSON.parse(str);
-                  hash[<%= bookid %>] = "<@= row @>";
+                  hash[<%= bookid %>] = "<%- row %>";
                   localStorage.setItem(idkey, JSON.stringify(hash));
                 }
 
