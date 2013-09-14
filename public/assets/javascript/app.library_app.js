@@ -183,7 +183,7 @@ MyApp.LibraryApp = function(){
            var sub_list = list.slice(start, step);
            var totalItems = sub_list.length;
 
-           console.log(sub_list);
+           //console.log(sub_list);
 
           if(totalItems == 0){
             callback([]);
@@ -197,11 +197,12 @@ MyApp.LibraryApp = function(){
             _.each(sub_list, function(item){
                var thumbnail = null;
               searchResults[searchResults.length] = new Book({
-                thumbnail: 'cover/' + item.path + '/cover_128_190.jpg',
-                title: item.title,
-                subtitle: item.title,
-                description: item.desc,
-                googleId: item.id
+                var obj = JSON.parse(item);
+                thumbnail: 'cover/' + obj.path + '/cover_128_190.jpg',
+                title: obj.title,
+                subtitle: obj.title,
+                description: obj.desc,
+                googleId: obj.id
               });
             });
             callback(searchResults);
