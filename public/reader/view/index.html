@@ -40,7 +40,7 @@
                   var str = localStorage.getItem(idkey);
                   var list = (str == null) ? [] :  JSON.parse(str);
                   list.push('<%- row %>');
-                  localStorage.setItem(idkey, JSON.stringify(list));
+                  localStorage.setItem(idkey, list);
                 }
 
                 EPUBJSR.app.init("<%= epub_path %>");
