@@ -22,7 +22,7 @@ MyApp.LibraryApp = function(){
       MyApp.vent.on("search:more", function(){ self.moreBooks(); });
 
       MyApp.vent.on("search:allBooks", function(){ self.getAllBooks(); });  //"search:rank"
-      MyApp.vent.on("search:rank", function(){ self.getRankBooks(); });
+      MyApp.vent.on("search:bookShelf", function(){ self.getBookShelf(); });
 
       this.searchType = 'allBooks';
       
@@ -77,13 +77,13 @@ MyApp.LibraryApp = function(){
 
     },
 
-    getRankBooks: function(){
+    getBookShelf: function(){
       this.page = 0;
 
-      this.searchType = 'rank';
+      this.searchType = 'bookshelf';
       
       var self = this;
-      this.fetchRankBooks(function(books){
+      this.fetchBookShelf(function(books){
         if(books.length < 1){
           MyApp.vent.trigger("search:noResults");
         }
@@ -113,8 +113,8 @@ MyApp.LibraryApp = function(){
         //console.log(books);
             self.add(books);
           });
-      }else if(this.searchType == 'rank'){
-          this.fetchRankBooks(function(books){
+      }else if(this.searchType == 'bookshelf'){
+          this.fetchBookShelf(function(books){
         //console.log(books);
             self.add(books);
           });
@@ -166,30 +166,33 @@ MyApp.LibraryApp = function(){
       });//fetchbook
     },
 
-    fetchRankBooks: function(callback){
+    fetchBookShelf: function(callback){
       if(this.loading) return true;
 
       this.loading = true;
       
       var self = this;
-      var query = (this.page * this.maxResults)+'/' + (this.maxResults - 1);
-      
-      $.ajax({
-        url: '/api/get_rank_books_list/' + query,
-        dataType: 'json',
-        data: '',
-        success: function (res) {
-          MyApp.vent.trigger("search:stop");
-          if(res.totalItems == 0){
+      var start = this.page * this.maxResults;
+      var step = this.maxResults;
+
+      if('localStorage' in window && window['localStorage'] !== null){
+           var list_key = "CalibreBookDetailDataList";
+           var str = localStorage.getItem(list_key);
+           var list = (str == null) ? [] :  JSON.parse(str);
+           var sub_list = list.slice(start, step);
+           var totalItems = sub_list.length;
+
+          if(totalItems == 0){
             callback([]);
             return [];
           }
+
           if(res.totalItems){
             self.page++;
-            self.totalItems = res.totalItems;
+            self.totalItems = totalItems;
             var searchResults = [];
-            _.each(res.items, function(item){
-              var thumbnail = null;
+            _.each(sub_list, function(item){
+               var thumbnail = null;
               searchResults[searchResults.length] = new Book({
                 thumbnail: 'cover/' + item.id,
                 title: item.title,
@@ -206,9 +209,9 @@ MyApp.LibraryApp = function(){
             MyApp.vent.trigger("search:error");
             self.loading = false;
           }
-        }
-      });//fetchbook
+      }
     },
+    
 
 
     searchBooks: function(searchTerm, callback){
@@ -287,11 +290,11 @@ MyApp.LibraryApp = function(){
     MyApp.vent.trigger("search:allBooks");
   };
 
-  LibraryApp.booksRank = function(){
+  LibraryApp.booksShelf = function(){
     LibraryApp.initializeLayout();
     MyApp.LibraryApp.BookList.showBooks(LibraryApp.Books);
     
-    MyApp.vent.trigger("search:rank");
+    MyApp.vent.trigger("search:bookShelf");
   };
   
   LibraryApp.defaultSearch = function(){
