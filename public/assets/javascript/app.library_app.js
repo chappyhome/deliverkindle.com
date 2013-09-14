@@ -22,7 +22,7 @@ MyApp.LibraryApp = function(){
       MyApp.vent.on("search:more", function(){ self.moreBooks(); });
 
       MyApp.vent.on("search:allBooks", function(){ self.getAllBooks(); });  //"search:rank"
-      MyApp.vent.on("search:bookshelf", function(){ self.getBookShelf(); });
+      MyApp.vent.on("search:shelf", function(){ self.getBookShelf(); });
 
       this.searchType = 'allBooks';
       
@@ -339,7 +339,7 @@ MyApp.LibraryApp = function(){
     LibraryApp.initializeLayout();
     MyApp.LibraryApp.BookList.showBooks(LibraryApp.Books);
     
-    MyApp.vent.trigger("search:bookshelf");
+    MyApp.vent.trigger("search:shelf");
   };
   
   LibraryApp.defaultSearch = function(){
