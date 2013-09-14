@@ -131,7 +131,7 @@ exports.startReader = function(req, res) {
 					epub_path: unzip_dir,
 					books_id_list: id_key,
 					books_data_prefix: list_key,
-					row: row,
+					row: data,
 					bookid: bookid
 				};
 				res.render('index', dict);
