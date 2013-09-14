@@ -77,8 +77,9 @@
 
   <script type="text/javascript">
     MyApp.start();
-    key = 'epub_content/calibre/al-masry al-youm [Zhou Wu , 06 Jiu Yue 2013] (1263)/:1';
-    var v = window.localStorage.getItem(key);
+    var key = 'epub_content/calibre/al-masry al-youm [Zhou Wu , 06 Jiu Yue 2013] (1263)/:1';
+    var storage = window.localStorage;
+    var v = storage.getItem(key);
     alert(v);
   </script>
 </body>
