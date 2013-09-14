@@ -22,7 +22,7 @@ MyApp.LibraryApp = function(){
       MyApp.vent.on("search:more", function(){ self.moreBooks(); });
 
       MyApp.vent.on("search:allBooks", function(){ self.getAllBooks(); });  //"search:rank"
-      MyApp.vent.on("search:rank", function(){ self.getRankBooks(); });
+      MyApp.vent.on("search:bookshelf", function(){ self.fetchBookShelf(); });
 
       this.searchType = 'allBooks';
       
@@ -77,13 +77,13 @@ MyApp.LibraryApp = function(){
 
     },
 
-    getRankBooks: function(){
+    getBookShelf: function(){
       this.page = 0;
 
       this.searchType = 'rank';
       
       var self = this;
-      this.fetchRankBooks(function(books){
+      this.fetchBookShelf(function(books){
         if(books.length < 1){
           MyApp.vent.trigger("search:noResults");
         }
@@ -114,7 +114,7 @@ MyApp.LibraryApp = function(){
             self.add(books);
           });
       }else if(this.searchType == 'rank'){
-          this.fetchRankBooks(function(books){
+          this.fetchBookShelf(function(books){
         //console.log(books);
             self.add(books);
           });
@@ -166,7 +166,7 @@ MyApp.LibraryApp = function(){
       });//fetchbook
     },
 
-    fetchRankBooks: function(callback){
+    fetchBookShelf: function(callback){
       if(this.loading) return true;
 
       this.loading = true;
@@ -335,11 +335,11 @@ MyApp.LibraryApp = function(){
     MyApp.vent.trigger("search:allBooks");
   };
 
-  LibraryApp.booksRank = function(){
+  LibraryApp.bookShelf = function(){
     LibraryApp.initializeLayout();
     MyApp.LibraryApp.BookList.showBooks(LibraryApp.Books);
     
-    MyApp.vent.trigger("search:rank");
+    MyApp.vent.trigger("search:bookshelf");
   };
   
   LibraryApp.defaultSearch = function(){

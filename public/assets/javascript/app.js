@@ -37,7 +37,7 @@ MyApp.MenuView = Backbone.Marionette.View.extend({
   
   events: {
     'click #menu .js-menu-books': 'showLibraryApp',
-    'click #menu .js-menu-rank': 'showRankApp',
+    'click #menu .js-menu-bookshelf': 'showBookShelfApp',
     'click #menu .js-menu-close': 'closeApp'
   },
   
@@ -46,9 +46,9 @@ MyApp.MenuView = Backbone.Marionette.View.extend({
     MyApp.LibraryApp.defaultSearch();
   },
 
-  showRankApp: function(e){
+  showBookShelfApp: function(e){
     e.preventDefault();
-    MyApp.LibraryApp.booksRank();
+    MyApp.LibraryApp.bookShelf();
   },
   
   closeApp: function(e){
