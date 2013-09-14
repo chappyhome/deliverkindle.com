@@ -188,7 +188,7 @@ MyApp.LibraryApp = function(){
             return [];
           }
 
-          if(res.totalItems){
+          if(totalItems){
             self.page++;
             self.totalItems = totalItems;
             var searchResults = [];
