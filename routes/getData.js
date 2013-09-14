@@ -126,12 +126,17 @@ exports.startReader = function(req, res) {
 			if(exists){
 				var unzip_dir = "epub_content/" +r.path + "/";//CALIBRE_ALL_BOOKS_CLICK_HASH
 				//redisClient.hincrby(CALIBRE_ALL_BOOKS_CLICK_HASH, bookid, 1);
+				var bookdata = {
+					title: r.title,
+					description: r.desc,
+					path: r.path
+				};
 				var hash_key = "CalibreBookDetailDataHash";
 				var list_key = "CalibreBookIdList";
 				var dict = {
 					epub_path: unzip_dir,
 					books_data_hash: hash_key,
-					row: row,
+					row: bookdata,
 					bookid: bookid,
 					books_id_list: list_key
 				};

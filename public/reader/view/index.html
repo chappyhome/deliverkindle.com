@@ -40,11 +40,10 @@
                   var books = localStorage.getItem(datakey);
                   var h = (books == null) ? {} : JSON.parse(books);
 
-                  h[<%= bookid %>]  = "<%= row %>";
-                  var r = "<%= row %>";
-                  var o = JSON.parse(r);
-                  console.log(o.path);
-                  console.log(o.isdn);
+                  h[<%= bookid %>]  = <%= row %>;
+                  var r = <%= row %>;
+                  console.log(r.path);
+
                   localStorage.setItem(datakey, JSON.stringify(h));
 
                   var idkey = "<%= books_id_list %>";
