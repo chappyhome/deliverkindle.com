@@ -172,55 +172,9 @@ MyApp.LibraryApp = function(){
       this.loading = true;
       
       var self = this;
-      //var query = (this.page * this.maxResults)+'/' + (this.maxResults - 1);
-      var start = this.page * this.maxResults;
-      var step = this.maxResults;
-
-      if('localStorage' in window && window['localStorage'] !== null){
-           var list_key = "CalibreBookIdList";
-           var books_data_prefix = "CalibreBookDetailDataList";
-           var str = localStorage.getItem(list_key);
-           var list = (str == null) ? [] :  JSON.parse(str);
-           var new_list = _.uniq(list);
-           var sub_list = new_list.slice(start, step);
-           var totalItems = sub_list.length;
-
-           console.log(sub_list);
-
-          if(totalItems == 0){
-            callback([]);
-            return [];
-          }
-          //
-          if(totalItems){
-            self.page++;
-            self.totalItems = totalItems;
-            var searchResults = [];
-            _.each(sub_list, function(item){
-               var thumbnail = null;
-               console.log(item);
-               var key = books_data_prefix + "_" + item;
-               var book_detail = localStorage.getItem(key);
-               var book_json = JSON.parse(book_detail);
-              searchResults[searchResults.length] = new Book({
-                //var obj = JSON.parse(item);
-
-                thumbnail: 'cover/' + book_json.path + '/cover_128_190.jpg',
-                title: book_json.title,
-                subtitle: book_json.title,
-                description: book_json.desc,
-                googleId: book_json.id
-              });
-            });
-            callback(searchResults);
-            self.loading = false;
-            return searchResults;
-          }
-          else if (res.error) {
-            MyApp.vent.trigger("search:error");
-            self.loading = false;
-          }
-      }
+      var query = (this.page * this.maxResults)+'/' + (this.maxResults - 1);
+      callback([]);
+      return [];
       
       // $.ajax({
       //   url: '/api/get_rank_books_list/' + query,
