@@ -22,7 +22,7 @@ MyApp.LibraryApp = function(){
       MyApp.vent.on("search:more", function(){ self.moreBooks(); });
 
       MyApp.vent.on("search:allBooks", function(){ self.getAllBooks(); });  //"search:rank"
-      MyApp.vent.on("search:bookShelf", function(){ self.getBookShelf(); });
+      MyApp.vent.on("search:rank", function(){ self.getRankBooks(); });
 
       this.searchType = 'allBooks';
       
@@ -77,13 +77,13 @@ MyApp.LibraryApp = function(){
 
     },
 
-    getBookShelf: function(){
+    getRankBooks: function(){
       this.page = 0;
 
-      this.searchType = 'bookshelf';
+      this.searchType = 'rank';
       
       var self = this;
-      this.fetchBookShelf(function(books){
+      this.fetchRankBooks(function(books){
         if(books.length < 1){
           MyApp.vent.trigger("search:noResults");
         }
@@ -113,8 +113,8 @@ MyApp.LibraryApp = function(){
         //console.log(books);
             self.add(books);
           });
-      }else if(this.searchType == 'bookshelf'){
-          this.fetchBookShelf(function(books){
+      }else if(this.searchType == 'rank'){
+          this.fetchRankBooks(function(books){
         //console.log(books);
             self.add(books);
           });
@@ -166,57 +166,49 @@ MyApp.LibraryApp = function(){
       });//fetchbook
     },
 
+    fetchRankBooks: function(callback){
+      if(this.loading) return true;
 
-    fetchBookShelf: function(callback){
-        callback([]);
-        return [];
-    },
-    // fetchBookShelf: function(callback){
-    //   if(this.loading) return true;
-
-    //   this.loading = true;
+      this.loading = true;
       
-    //   var self = this;
-    //   var start = this.page * this.maxResults;
-    //   var step = this.maxResults;
-
-    //   if('localStorage' in window && window['localStorage'] !== null){
-    //        var list_key = "CalibreBookDetailDataList";
-    //        var str = localStorage.getItem(list_key);
-    //        var list = (str == null) ? [] :  JSON.parse(str);
-    //        var sub_list = list.slice(start, step);
-    //        var totalItems = sub_list.length;
-
-    //       if(totalItems == 0){
-    //         callback([]);
-    //         return [];
-    //       }
-
-    //       if(res.totalItems){
-    //         self.page++;
-    //         self.totalItems = totalItems;
-    //         var searchResults = [];
-    //         _.each(sub_list, function(item){
-    //            var thumbnail = null;
-    //           searchResults[searchResults.length] = new Book({
-    //             thumbnail: 'cover/' + item.id,
-    //             title: item.title,
-    //             subtitle: item.title,
-    //             description: item.desc,
-    //             googleId: item.id
-    //           });
-    //         });
-    //         callback(searchResults);
-    //         self.loading = false;
-    //         return searchResults;
-    //       }
-    //       else if (res.error) {
-    //         MyApp.vent.trigger("search:error");
-    //         self.loading = false;
-    //       }
-    //   }
-    // },
-    
+      var self = this;
+      var query = (this.page * this.maxResults)+'/' + (this.maxResults - 1);
+      
+      $.ajax({
+        url: '/api/get_rank_books_list/' + query,
+        dataType: 'json',
+        data: '',
+        success: function (res) {
+          MyApp.vent.trigger("search:stop");
+          if(res.totalItems == 0){
+            callback([]);
+            return [];
+          }
+          if(res.totalItems){
+            self.page++;
+            self.totalItems = res.totalItems;
+            var searchResults = [];
+            _.each(res.items, function(item){
+              var thumbnail = null;
+              searchResults[searchResults.length] = new Book({
+                thumbnail: 'cover/' + item.id,
+                title: item.title,
+                subtitle: item.title,
+                description: item.desc,
+                googleId: item.id
+              });
+            });
+            callback(searchResults);
+            self.loading = false;
+            return searchResults;
+          }
+          else if (res.error) {
+            MyApp.vent.trigger("search:error");
+            self.loading = false;
+          }
+        }
+      });//fetchbook
+    },
 
 
     searchBooks: function(searchTerm, callback){
@@ -295,11 +287,11 @@ MyApp.LibraryApp = function(){
     MyApp.vent.trigger("search:allBooks");
   };
 
-  LibraryApp.booksShelf = function(){
+  LibraryApp.booksRank = function(){
     LibraryApp.initializeLayout();
     MyApp.LibraryApp.BookList.showBooks(LibraryApp.Books);
     
-    MyApp.vent.trigger("search:bookShelf");
+    MyApp.vent.trigger("search:rank");
   };
   
   LibraryApp.defaultSearch = function(){
