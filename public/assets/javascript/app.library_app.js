@@ -172,30 +172,44 @@ MyApp.LibraryApp = function(){
       this.loading = true;
       
       var self = this;
-      var query = (this.page * this.maxResults)+'/' + (this.maxResults - 1);
-      
-      $.ajax({
-        url: '/api/get_rank_books_list/' + query,
-        dataType: 'json',
-        data: '',
-        success: function (res) {
-          MyApp.vent.trigger("search:stop");
-          if(res.totalItems == 0){
+      //var query = (this.page * this.maxResults)+'/' + (this.maxResults - 1);
+      var start = this.page * this.maxResults;
+      var step = this.maxResults;
+
+      if('localStorage' in window && window['localStorage'] !== null){
+           var list_key = "CalibreBookIdList";
+           var books_data_prefix = "CalibreBookDetailDataList";
+           var str = localStorage.getItem(list_key);
+           var list = (str == null) ? [] :  JSON.parse(str);
+           var new_list = _.uniq(list);
+           var sub_list = new_list.slice(start, step);
+           var totalItems = sub_list.length;
+
+           console.log(sub_list);
+
+          if(totalItems == 0){
             callback([]);
             return [];
           }
-          if(res.totalItems){
+          //
+          if(totalItems){
             self.page++;
-            self.totalItems = res.totalItems;
+            self.totalItems = totalItems;
             var searchResults = [];
-            _.each(res.items, function(item){
-              var thumbnail = null;
+            _.each(sub_list, function(item){
+               var thumbnail = null;
+               console.log(item);
+               var key = books_data_prefix + "_" + item;
+               var book_detail = localStorage.getItem(key);
+               var book_json = JSON.parse(book_detail);
               searchResults[searchResults.length] = new Book({
-                thumbnail: 'cover/' + item.id,
-                title: item.title,
-                subtitle: item.title,
-                description: item.desc,
-                googleId: item.id
+                //var obj = JSON.parse(item);
+
+                thumbnail: 'cover/' + book_json.path + '/cover_128_190.jpg',
+                title: book_json.title,
+                subtitle: book_json.title,
+                description: book_json.desc,
+                googleId: book_json.id
               });
             });
             callback(searchResults);
@@ -206,8 +220,42 @@ MyApp.LibraryApp = function(){
             MyApp.vent.trigger("search:error");
             self.loading = false;
           }
-        }
-      });//fetchbook
+      }
+      
+      // $.ajax({
+      //   url: '/api/get_rank_books_list/' + query,
+      //   dataType: 'json',
+      //   data: '',
+      //   success: function (res) {
+      //     MyApp.vent.trigger("search:stop");
+      //     if(res.totalItems == 0){
+      //       callback([]);
+      //       return [];
+      //     }
+      //     if(res.totalItems){
+      //       self.page++;
+      //       self.totalItems = res.totalItems;
+      //       var searchResults = [];
+      //       _.each(res.items, function(item){
+      //         var thumbnail = null;
+      //         searchResults[searchResults.length] = new Book({
+      //           thumbnail: 'cover/' + item.id,
+      //           title: item.title,
+      //           subtitle: item.title,
+      //           description: item.desc,
+      //           googleId: item.id
+      //         });
+      //       });
+      //       callback(searchResults);
+      //       self.loading = false;
+      //       return searchResults;
+      //     }
+      //     else if (res.error) {
+      //       MyApp.vent.trigger("search:error");
+      //       self.loading = false;
+      //     }
+      //   }
+      // });//fetchbook
     },
 
 
