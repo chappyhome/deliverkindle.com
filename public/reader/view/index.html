@@ -36,14 +36,14 @@
                 fileStorage.filePath = EPUBJS.filePath;
 
                 if(supports_html5_storage()){
-                  var idkey = "<%= books_data_hash %>";
+                  var idkey = "<%=books_data_hash %>";
                   var str = localStorage.getItem(idkey);
                   var hash = (str == null) ? {} :  JSON.parse(str);
-                  hash[<%= bookid %>] = "<%== row %>";
+                  hash[<%= bookid %>] = "<%==row %>";
                   localStorage.setItem(idkey, JSON.stringify(hash));
                 }
 
-                EPUBJSR.app.init("<%= epub_path %>");
+                EPUBJSR.app.init("<%=epub_path %>");
               }  
             };
         
