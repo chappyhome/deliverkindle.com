@@ -20,13 +20,35 @@
         <script>
             "use strict";
             
-            document.onreadystatechange = function () {  
+            document.onreadystatechange = function () { 
+              function supports_html5_storage() {
+                try {
+                  return 'localStorage' in window && window['localStorage'] !== null;
+                } catch (e) {
+                  return false;
+                }
+              } 
               if (document.readyState == "complete") {
                 EPUBJS.VERSION = "0.1.6";
                 
                 EPUBJS.filePath = "js/libs/";
                 EPUBJS.cssPath = "css/";
                 fileStorage.filePath = EPUBJS.filePath;
+
+                if(supports_html5_storage()){
+                  var datakey = "<%= books_data_hash %>";
+                  var books = localStorage.getItem(datakey);
+                  var h = (books == null) ? {} : JSON.parse(books);
+                  h[<%= bookid %>]  = "<%= row %>"
+                  localStorage.setItem(datakey, JSON.stringify(h));
+
+                  var idkey = "<%= books_id_list %>";
+                  var ids = localStorage.getItem(idkey);
+                  var l = (ids == null) ? [] :  JSON.parse(ids);
+                  l.push(<%= bookid %>)
+                  localStorage.setItem(idkey, JSON.stringify(l));
+
+                }
 
                 EPUBJSR.app.init("<%= epub_path %>");
               }  
