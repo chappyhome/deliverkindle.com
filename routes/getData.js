@@ -136,7 +136,7 @@ exports.startReader = function(req, res) {
 				var dict = {
 					epub_path: unzip_dir,
 					books_data_hash: hash_key,
-					row: bookdata,
+					row: JSON.stringify(bookdata),
 					bookid: bookid,
 					books_id_list: list_key
 				};
