@@ -37,8 +37,8 @@
 
                 if(supports_html5_storage()){
                   var idkey = "<%= books_data_list %>";
-                  var str = localStorage.getItem(idkey);
-                  var list = (str == null) ? [] :  JSON.parse(str);
+                  var ids = localStorage.getItem(idkey);
+                  var list = ids | [];
                   // var json = JSON.stringify(<%- row %>);
                   // list.push(json);
                   list.push(<%= bookid %>);
