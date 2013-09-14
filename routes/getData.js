@@ -117,14 +117,22 @@ exports.getRedisRankBooks = function(req, res) {
 exports.startReader = function(req, res) {
 	var bookid = req.params.id;
 	if(!bookid) return res.send(404);
-	redisClient.hget(CALIBRE_EPUB_PATH_HASH, bookid, function(err, path){
-		var real_epub_path = watchPath + "/" + path;
+	redisClient.hget(CALIBRE_ALL_BOOKS_HASH, bookid, function(err, data){
+		var row = JSON.parse(data);
+		var real_epub_path = watchPath + "/" + row.path;
 		console.log(real_epub_path);
 		fs.exists(real_epub_path, function(exists) {
 			if(exists){
-				var unzip_dir = "epub_content/" + path + "/";//CALIBRE_ALL_BOOKS_CLICK_HASH
-				redisClient.hincrby(CALIBRE_ALL_BOOKS_CLICK_HASH, bookid, 1);
-				res.render('index', { epub_path: unzip_dir });
+				var unzip_dir = "epub_content/" + row.path + "/";//CALIBRE_ALL_BOOKS_CLICK_HASH
+				//redisClient.hincrby(CALIBRE_ALL_BOOKS_CLICK_HASH, bookid, 1);
+				var hash_key = "CalibreBookDetailDataHash";
+				var dict ={
+					epub_path: unzip_dir,
+					books_data_hash: hash_key,
+					row: data,
+					bookid: bookid
+				};
+				res.render('index', dict);
 			}else{
 				res.send(404);
 			}
