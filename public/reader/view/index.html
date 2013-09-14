@@ -39,6 +39,7 @@
                   var datakey = "<%= books_data_hash %>";
                   var books = localStorage.getItem(datakey);
                   var h = (books == null) ? {} : JSON.parse(books);
+                  console.log(h);
                   h[<%= bookid %>]  = "<%= row %>"
                   localStorage.setItem(datakey, JSON.stringify(h));
 
