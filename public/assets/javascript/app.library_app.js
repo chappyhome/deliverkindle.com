@@ -172,24 +172,28 @@ MyApp.LibraryApp = function(){
       this.loading = true;
       
       var self = this;
-      var query = (this.page * this.maxResults)+'/' + (this.maxResults - 1);
-      
-      $.ajax({
-        url: '/api/get_rank_books_list/' + query,
-        dataType: 'json',
-        data: '',
-        success: function (res) {
-          MyApp.vent.trigger("search:stop");
-          if(res.totalItems == 0){
+      //var query = (this.page * this.maxResults)+'/' + (this.maxResults - 1);
+      var start = this.page * this.maxResults;
+      var step = this.maxResults;
+
+      if('localStorage' in window && window['localStorage'] !== null){
+           var list_key = "CalibreBookDetailDataList";
+           var str = localStorage.getItem(list_key);
+           var list = (str == null) ? [] :  JSON.parse(str);
+           var sub_list = list.slice(start, step);
+           var totalItems = sub_list.length;
+
+          if(totalItems == 0){
             callback([]);
             return [];
           }
+
           if(res.totalItems){
             self.page++;
-            self.totalItems = res.totalItems;
+            self.totalItems = totalItems;
             var searchResults = [];
-            _.each(res.items, function(item){
-              var thumbnail = null;
+            _.each(sub_list, function(item){
+               var thumbnail = null;
               searchResults[searchResults.length] = new Book({
                 thumbnail: 'cover/' + item.id,
                 title: item.title,
@@ -206,8 +210,42 @@ MyApp.LibraryApp = function(){
             MyApp.vent.trigger("search:error");
             self.loading = false;
           }
-        }
-      });//fetchbook
+      }
+      
+      // $.ajax({
+      //   url: '/api/get_rank_books_list/' + query,
+      //   dataType: 'json',
+      //   data: '',
+      //   success: function (res) {
+      //     MyApp.vent.trigger("search:stop");
+      //     if(res.totalItems == 0){
+      //       callback([]);
+      //       return [];
+      //     }
+      //     if(res.totalItems){
+      //       self.page++;
+      //       self.totalItems = res.totalItems;
+      //       var searchResults = [];
+      //       _.each(res.items, function(item){
+      //         var thumbnail = null;
+      //         searchResults[searchResults.length] = new Book({
+      //           thumbnail: 'cover/' + item.id,
+      //           title: item.title,
+      //           subtitle: item.title,
+      //           description: item.desc,
+      //           googleId: item.id
+      //         });
+      //       });
+      //       callback(searchResults);
+      //       self.loading = false;
+      //       return searchResults;
+      //     }
+      //     else if (res.error) {
+      //       MyApp.vent.trigger("search:error");
+      //       self.loading = false;
+      //     }
+      //   }
+      // });//fetchbook
     },
 
 
