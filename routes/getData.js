@@ -113,11 +113,12 @@ exports.getRedisRankBooks = function(req, res) {
 
 };
 
-
+// forever start -l ~/.forever/forever.log -e ~/.forever/err.log -w -a app.js
 exports.startReader = function(req, res) {
 	var bookid = req.params.id;
 	if(!bookid) return res.send(404);
 	redisClient.hget(CALIBRE_ALL_BOOKS_HASH, bookid, function(err, row){
+		console.log(row);
 		var real_epub_path = watchPath + "/" + row.path;
 		console.log(real_epub_path);
 		fs.exists(real_epub_path, function(exists) {
