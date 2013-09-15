@@ -179,7 +179,7 @@ MyApp.LibraryApp = function(){
       if('localStorage' in window && window['localStorage'] !== null){
            var list_key = "CalibreBookIdList";
            var books_data_prefix = "CalibreBookDetailDataList";
-           var str = localStorage.getItem(list_key);
+           var str = LS.get(list_key);
            var list = (str == null) ? [] :  JSON.parse(str);
            var new_list = _.uniq(list);
            var sub_list = new_list.slice(start, step);
@@ -193,14 +193,14 @@ MyApp.LibraryApp = function(){
           }
           //
           if(totalItems){
-            self.page++;
-            self.totalItems = totalItems;
+            this.page++;
+            this.totalItems = totalItems;
             var searchResults = [];
             _.each(sub_list, function(item){
                var thumbnail = null;
                console.log(item);
                var key = books_data_prefix + "_" + item;
-               var book_detail = localStorage.getItem(key);
+               var book_detail = LS.get(key);
                var book_json = JSON.parse(book_detail);
               searchResults[searchResults.length] = new Book({
                 //var obj = JSON.parse(item);
@@ -213,12 +213,12 @@ MyApp.LibraryApp = function(){
               });
             });
             callback(searchResults);
-            self.loading = false;
+            this.loading = false;
             return searchResults;
           }
           else if (res.error) {
             MyApp.vent.trigger("search:error");
-            self.loading = false;
+            this.loading = false;
           }
       }
       

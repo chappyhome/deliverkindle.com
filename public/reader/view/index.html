@@ -14,7 +14,8 @@
 
         <script src="js/libs/jquery-1.9.0.min.js"></script>
 
-        <script src="js/libs/zip.min.js"></script>        
+        <script src="js/libs/zip.min.js"></script>
+        <script src="js/libs/LS.js"></script>    
 
 
         <script>
@@ -38,15 +39,15 @@
 
                 if(supports_html5_storage()){
                   var idkey = "<%= books_id_list %>";
-                  var ids = localStorage.getItem(idkey);
+                  var ids = LS.get(idkey);
                   var list = (ids == null)?[]:JSON.parse(ids);
                   list.push(<%= bookid %>);
                   // var json = JSON.stringify(<%- row %>);
                   // list.push(json);
-                  localStorage.setItem(idkey,JSON.stringify(list));
+                  LS.set(idkey,JSON.stringify(list));
 
                   var book_detail_data_id = '<%= books_data_prefix %>' + "_" + <%= bookid %>;
-                  localStorage.setItem(book_detail_data_id, JSON.stringify(<%- row %>));
+                  LS.set(book_detail_data_id, JSON.stringify(<%- row %>));
                 }
 
                 EPUBJSR.app.init("<%= epub_path %>");
