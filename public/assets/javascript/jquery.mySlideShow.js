@@ -1,28 +1,6 @@
 
 
-
-
-
-
-/* my slide show */
-/*
-
-.my-slide-show{position: relative;}
-.my-slide-show-default-nav{position: absolute;right: 25px;bottom: 10px;padding: 5px;}
-.my-slide-show-default-nav ul{list-style: none;}
-.my-slide-show-default-nav li{float: left; width: 14px; height: 12px; margin-left: 5px; overflow:hidden; text-indent: -100px; background: url(/cdn/img/ico_carousel_dots.png) no-repeat left center;cursor: pointer;}
-    .my-slide-show-default-nav li.current{background-position: right center;}
-.my-slide-show-prev-button{position: absolute;left: 5px; top: 50%; margin-top: -18px; width: 22px; height: 36px; background: url(/cdn/img/btn_l.png) no-repeat;cursor: pointer;}
-        .my-slide-show-next-button{position: absolute;right: 5px; top: 50%; margin-top: -18px; width: 22px; height: 36px;  background: url(/cdn/img/btn_r.png) no-repeat;cursor: pointer;}
-
-*/
-
-
-
-
-
-
-;(function($){
+(function($){
 
     var themes={
         "default":function(){

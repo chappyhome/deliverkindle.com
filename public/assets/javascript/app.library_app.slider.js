@@ -22,19 +22,45 @@ MyApp.LibraryApp.CategorySlider = function(){
 
 
   MyApp.addInitializer(function(options){
-  	 var datas = [ {"cagetoryname":"11111"},
-  	 			  {"cagetoryname":"22222"},
-  	 			  {"cagetoryname":"33333"},
-  	 			  {"cagetoryname":"44444"},
-  	 			  {"cagetoryname":"55555"}
+  	 var datas = [ {"cagetoryname":"科幻小说"},
+  	 			  {"cagetoryname":"科幻小说"},
+            {"cagetoryname":"科幻小说"},
+            {"cagetoryname":"科幻小说111"},
+            {"cagetoryname":"科幻小说222"},
+            {"cagetoryname":"科幻小说333"},
+            {"cagetoryname":"科幻小说"},
+            {"cagetoryname":"科幻小说"},
+             {"cagetoryname":"科幻小说"},
+            {"cagetoryname":"科幻小说"},
+             {"cagetoryname":"科幻小说"},
+            {"cagetoryname":"科幻小说"},
+             {"cagetoryname":"科幻小说"},
+            {"cagetoryname":"科幻小说"},
+             {"cagetoryname":"科幻小说"},
+            {"cagetoryname":"科幻小说"},
+             {"cagetoryname":"科幻小说"},
+            {"cagetoryname":"科幻小说"},
+             {"cagetoryname":"科幻小说"},
+            {"cagetoryname":"科幻小说"},
+             {"cagetoryname":"科幻小说"},
+            {"cagetoryname":"科幻小说"},
+             {"cagetoryname":"科幻小说"},
+            {"cagetoryname":"科幻小说"},
+             {"cagetoryname":"科幻小说"},
+            {"cagetoryname":"科幻小说"},
+             {"cagetoryname":"科幻小说"},
+            {"cagetoryname":"科幻小说"},
+            {"cagetoryname":"科幻小说"}
+  	 
+  
   	            ];
   	 var categorys = new Categorys(datas);
   	 var categoryListView = new CategoryListView({collection: categorys });
   	 MyApp.footer.show(categoryListView);
   	 //console.log($(categoryListView.$el).mySlideShow());
   	 $(categoryListView.$el).mySlideShow({
-  	 	autoSlide:true,
-  	 	autoSlideInterval:3000
+  	 	autoSlide:false,
+  	 	autoSlideInterval:5000
   	 });
   });
   return CategorySlider;

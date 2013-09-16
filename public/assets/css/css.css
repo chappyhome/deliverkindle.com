@@ -14,5 +14,15 @@
         .my-slide-show-next-button{position: absolute;right: 5px; top: 50%; margin-top: -18px; width: 22px; height: 36px;  background: url(../images/btn_r.png) no-repeat;cursor: pointer;}
 
 
-#mycarousel{width:800px; border: 1px solid red;}
-#mycarousel li{float:left;width: 100px;}
+#mycarousel{width:90%;}
+#mycarousel li{float:left;width: 90px;}
+
+#mycarousel li a.item {
+display: block;
+margin-left: 10px;
+text-decoration: none !important;
+padding: 29px 20px 30px;
+background: #FFFF;
+color: #FFF;
+font-family: 'Sofia';
+}
