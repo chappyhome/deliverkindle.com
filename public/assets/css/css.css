@@ -4,3 +4,15 @@
   font-weight: 400;
   src: local('Sofia'), local('Sofia-Regular'), url('http://themes.googleusercontent.com/static/fonts/sofia/v2/eNNA2vlZnUPtgq9g__E3cA.woff') format('woff');
 }
+
+.my-slide-show{position: relative;}
+.my-slide-show-default-nav{position: absolute;right: 25px;bottom: 10px;padding: 5px;}
+.my-slide-show-default-nav ul{list-style: none;}
+.my-slide-show-default-nav li{float: left; width: 14px; height: 12px; margin-left: 5px; overflow:hidden; text-indent: -100px; background: url(../images/ico_carousel_dots.png) no-repeat left center;cursor: pointer;}
+    .my-slide-show-default-nav li.current{background-position: right center;}
+.my-slide-show-prev-button{position: absolute;left: 5px; top: 50%; margin-top: -18px; width: 22px; height: 36px; background: url(../images/btn_l.png) no-repeat;cursor: pointer;}
+        .my-slide-show-next-button{position: absolute;right: 5px; top: 50%; margin-top: -18px; width: 22px; height: 36px;  background: url(../images/btn_r.png) no-repeat;cursor: pointer;}
+
+
+#mycarousel{width:800px; border: 1px solid red;}
+#mycarousel li{float:left;width: 100px;}

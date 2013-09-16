@@ -3,6 +3,7 @@
 <head>
   <title>Readream Books</title>
   <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/css.css">
   <link rel="stylesheet" href="assets/css/bootstrap-modal.css">
   <link href="http://fonts.googleapis.com/css?family=Sofia" rel="stylesheet" type="text/css">
 </head>
@@ -20,8 +21,10 @@
   </div>
   <div id="content"></div>
   <div id="modal"></div>
-
+  <div id="wrap"> </div>
   <!-- templates -->
+  <script type="text/template" id="category-template">
+  </script>
   <script type="text/template" id="library-layout">
     <div id="searchBar">
       Search : <input type="text" name="search" autocomplete="off" id="searchTerm" value="" />
@@ -60,6 +63,10 @@
     <p>That is all, folks !</p>
   </script>
 
+  <script type="text/template" id="slider-template">
+    <a class="item" href="#<%= cagetoryname %>"><%= cagetoryname %></a>
+  </script>
+
   <!-- Thirt-Party Libraries (Order matters) -->
   <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
   <script src="http://cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
@@ -67,6 +74,8 @@
   <script src="./assets/javascript/vendor/backbone.js"></script>
   <script src="./assets/javascript/vendor/backbone.marionette.js"></script>
   <script src="./assets/javascript/vendor/bootstrap-modal.js"></script>
+  <script src="./assets/javascript/vendor/jquery.jcarousel.min.js"></script>
+  <script src="./assets/javascript/jquery.mySlideShow.js"></script>
   
   <!-- Application core (Order matters) -->
   <script type="text/javascript" src="assets/javascript/app.js"></script>
@@ -74,6 +83,7 @@
   <script type="text/javascript" src="assets/javascript/app.library_app.book_list.js"></script>
   <script type="text/javascript" src="assets/javascript/app.library_app.routing.js"></script>
   <script type="text/javascript" src="assets/javascript/app.closer.js"></script>
+  <script type="text/javascript" src="assets/javascript/app.library_app.slider.js"></script>
   <script type="text/javascript" src="assets/javascript/UA-29512090-2.js"></script>
   <script type="text/javascript" src="assets/javascript/LS.js"></script>
 
