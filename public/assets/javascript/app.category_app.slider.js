@@ -30,8 +30,7 @@ MyApp.LibraryApp.CategorySlider = function(){
    CategorySlider.showCategory = function(){
      var categorys = new Categorys();
      var categoryListView = new CategoryListView({collection: categorys });
-     //console.log(MyApp.Category);
-     var obj=MyApp.footer.show(categoryListView);
+     MyApp.footer.show(categoryListView);
      //console.log($(categoryListView.$el).mySlideShow());
 
      // $(".JQ-slide").Slide({
@@ -42,7 +41,7 @@ MyApp.LibraryApp.CategorySlider = function(){
      //    steps:1
      //  });
 
-
   };
+
   return CategorySlider;
 }();

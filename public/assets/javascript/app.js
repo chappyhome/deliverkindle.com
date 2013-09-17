@@ -49,7 +49,7 @@ MyApp.MenuView = Backbone.Marionette.View.extend({
 
   showRankApp: function(e){
     e.preventDefault();
-    MyApp.LibraryApp.booksRank();
+    //MyApp.LibraryApp.booksRank();
   },
   
   closeApp: function(e){

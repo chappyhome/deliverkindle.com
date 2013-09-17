@@ -5,22 +5,7 @@
   src: local('Sofia'), local('Sofia-Regular'), url('http://themes.googleusercontent.com/static/fonts/sofia/v2/eNNA2vlZnUPtgq9g__E3cA.woff') format('woff');
 }
 
-*{margin:0;padding:0;}
-ul,ol{list-style:none outside;}
-img{border:0 none;vertical-align:top;}
-table{border-collapse:collapse;border-spacing:0;}
-body{font:12px/1.5 Tahoma, Helvetica, Arial, "\5b8b\4f53", sans-serif;}
-h1,h2,h3,h4,h5,h6{font-size:14px;}
-a:link, a:visited{text-decoration:none;}
-a:hover, a:focus, a:active{text-decoration:underline;}
-a:focus, a:active{outline:none;}
-.lft{float:left;display:inline;}
-.rgt{float:right;display:inline;}
-.clearfix:after{visibility:hidden;display:block;font-size:1px;content:" ";clear:both;height:0;}
-*html .clearfix{zoom:1;} /* IE6 */
-*:first-child+html .clearfix{zoom:1;}
-.layout{padding:0 0 0 40px;}
-.layout  h2{margin:20px 0 20px 0;font-size:14px;}
+
 
 
 .hotPic{margin:30px 0 0 220px;}*/

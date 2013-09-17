@@ -168,9 +168,11 @@ MyApp.LibraryApp = function(){
             });
             callback(searchResults);
             return searchResults;
+            self.loading = false;
           }
           else if (res.error) {
             MyApp.vent.trigger("search:error");
+            self.loading = false;
           }
         }
       });//fetchbook
@@ -208,21 +210,25 @@ MyApp.LibraryApp = function(){
                var key = books_data_prefix + "_" + item;
                var book_detail = LS.get(key);
                var book_json = JSON.parse(book_detail);
-              searchResults[searchResults.length] = new Book({
-                //var obj = JSON.parse(item);
-
-                thumbnail: 'cover/' + book_json.path + '/cover_128_190.jpg',
-                title: book_json.title,
-                subtitle: book_json.title,
-                description: book_json.desc,
-                googleId: book_json.id
-              });
+          
+              if(book_json != null) {
+                  searchResults[searchResults.length] = new Book({
+                    //var obj = JSON.parse(item);
+                    thumbnail: 'cover/' + book_json.path + '/cover_128_190.jpg',
+                    title: book_json.title,
+                    subtitle: book_json.title,
+                    description: book_json.desc,
+                    googleId: book_json.id
+                  });
+              }
             });
             callback(searchResults);
             return searchResults;
+            self.loading = false;
           }
           else if (res.error) {
             MyApp.vent.trigger("search:error");
+            self.loading = false;
           }
       }
     },

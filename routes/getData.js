@@ -52,17 +52,20 @@ exports.getCoverPath = function(req, res){
 		var r = JSON.parse(reply);
 
 		//path = (r != null)?p.join(root,'cover/' + r.path + '/cover_128_190.jpg'):p.join(root,'assets/images/cover_128_190.jpg');
-		path = (r != null)?'cover/' + r.path + '/cover_128_190.jpg':'assets/images/cover_128_190.jpg';
+		var  p = r.path || '';
+		var path = watchPath + "/" + p + '/cover_128_190.jpg';
 		console.log(path);
-		res.send(path);
-		// fs.exists(path, function(exists) {
-		// 	if(exists){
-		// 		res.sendfile(path);
-		// 	}else{
-		// 		res.sendfile(p.join(root,'assets/images/cover_128_190.jpg'));
-		// 	}
+		//res.send(path);//
+		console.log(path);
+		//console.log("dddddddddddddddddddd")
+		fs.exists(path, function(exists) {
+			if(exists){
+				res.send('cover/' + p + '/cover_128_190.jpg');
+			}else{
+				res.send('assets/images/cover_128_190.jpg');
+			}
 				
-		// });
+		});
 	});
 
 
