@@ -6,7 +6,7 @@ MyApp.LibraryApp = function(){
     
     regions: {
       search: "#searchBar",
-      books: "#bookContainer"
+      books: "#bookContainer",
     }
   });
   
@@ -22,7 +22,9 @@ MyApp.LibraryApp = function(){
       MyApp.vent.on("search:more", function(){ self.moreBooks(); });
 
       MyApp.vent.on("search:allBooks", function(){ self.getAllBooks(); });  //"search:rank"
-      MyApp.vent.on("search:rank", function(){ self.getRankBooks(); });
+      MyApp.vent.on("search:rank", function(){ self.getRankBooks(); });//series
+
+      MyApp.vent.on("search:series", function(seriesid){self.getSeriesBooks(seriesid); });
 
       this.searchType = 'allBooks';
       
@@ -37,6 +39,7 @@ MyApp.LibraryApp = function(){
       
       // remember the previous search
       this.previousSearch = null;
+
       // the maximum number of results for the previous search
       this.totalItems = null;
     },
@@ -94,6 +97,20 @@ MyApp.LibraryApp = function(){
       });
 
     },
+
+    getSeriesBooks: function(seriesid){
+      var self = this;
+      this.fetchSeriesBooks(seriesid, function(books){
+        if(books.length < 1){
+          MyApp.vent.trigger("search:noResults");
+        }
+        else{
+          //console.log(books);
+          self.reset(books);
+        }
+      });
+
+    },
     
     moreBooks: function(){
       // if we've loaded all the books for this search, there are no more to load !
@@ -123,10 +140,6 @@ MyApp.LibraryApp = function(){
     },
     
     fetchBooks: function(callback){
-      if(this.loading) return true;
-
-      this.loading = true;
-      
       var self = this;
       var query = (this.page * this.maxResults)+'/' + (this.maxResults - 1);
       
@@ -135,7 +148,6 @@ MyApp.LibraryApp = function(){
         dataType: 'json',
         data: '',
         success: function (res) {
-          MyApp.vent.trigger("search:stop");
           if(res.totalItems == 0){
             callback([]);
             return [];
@@ -155,26 +167,20 @@ MyApp.LibraryApp = function(){
               });
             });
             callback(searchResults);
-            self.loading = false;
             return searchResults;
           }
           else if (res.error) {
             MyApp.vent.trigger("search:error");
-            self.loading = false;
           }
         }
       });//fetchbook
     },
 
     fetchRankBooks: function(callback){
-      if(this.loading) return true;
-
-      this.loading = true;
-      
       var self = this;
       var query = (this.page * this.maxResults)+'/' + (this.maxResults - 1);
       var start = this.page * this.maxResults;
-      var step = this.maxResults;
+      var end = start + this.maxResults;
 
       if('localStorage' in window && window['localStorage'] !== null){
            var list_key = "CalibreBookIdList";
@@ -182,7 +188,7 @@ MyApp.LibraryApp = function(){
            var str = LS.get(list_key);
            var list = (str == null) ? [] :  JSON.parse(str);
            var new_list = _.uniq(list);
-           var sub_list = new_list.slice(start, step);
+           var sub_list = new_list.slice(start, end);
            var totalItems = sub_list.length;
 
            console.log(sub_list);
@@ -213,49 +219,12 @@ MyApp.LibraryApp = function(){
               });
             });
             callback(searchResults);
-            this.loading = false;
             return searchResults;
           }
           else if (res.error) {
             MyApp.vent.trigger("search:error");
-            this.loading = false;
           }
       }
-      
-      // $.ajax({
-      //   url: '/api/get_rank_books_list/' + query,
-      //   dataType: 'json',
-      //   data: '',
-      //   success: function (res) {
-      //     MyApp.vent.trigger("search:stop");
-      //     if(res.totalItems == 0){
-      //       callback([]);
-      //       return [];
-      //     }
-      //     if(res.totalItems){
-      //       self.page++;
-      //       self.totalItems = res.totalItems;
-      //       var searchResults = [];
-      //       _.each(res.items, function(item){
-      //         var thumbnail = null;
-      //         searchResults[searchResults.length] = new Book({
-      //           thumbnail: 'cover/' + item.id,
-      //           title: item.title,
-      //           subtitle: item.title,
-      //           description: item.desc,
-      //           googleId: item.id
-      //         });
-      //       });
-      //       callback(searchResults);
-      //       self.loading = false;
-      //       return searchResults;
-      //     }
-      //     else if (res.error) {
-      //       MyApp.vent.trigger("search:error");
-      //       self.loading = false;
-      //     }
-      //   }
-      // });//fetchbook
     },
 
 
@@ -303,6 +272,42 @@ MyApp.LibraryApp = function(){
           }
         }
       });
+    },
+
+    fetchSeriesBooks: function(id, callback){      
+      var self = this;
+      
+      $.ajax({
+        url: '/api/get_series_books/' + id,
+        dataType: 'json',
+        data: '',
+        success: function (res) {
+          MyApp.vent.trigger("search:stop");
+          if(res.totalItems == 0){
+            callback([]);
+            return [];
+          }
+          if(res.items){
+            self.totalItems = res.totalItems;
+            var searchResults = [];
+            _.each(res.items, function(item){
+              var thumbnail = null;
+              searchResults[searchResults.length] = new Book({
+                thumbnail: 'cover/' + item.path + '/cover_128_190.jpg',
+                title: item.title,
+                subtitle: item.title,
+                description: item.desc,
+                googleId: item.id
+              });
+            });
+            callback(searchResults);
+            return searchResults;
+          }
+          else if (res.error) {
+            MyApp.vent.trigger("search:error");
+          }
+        }
+      });
     }
   });
 
@@ -319,6 +324,7 @@ MyApp.LibraryApp = function(){
       MyApp.vent.trigger("layout:rendered");
     });
     MyApp.content.show(MyApp.LibraryApp.layout);
+
   };
   
   LibraryApp.search = function(term){
@@ -328,7 +334,7 @@ MyApp.LibraryApp = function(){
     MyApp.vent.trigger("search:term", term);
   };
 
-  LibraryApp.allBooks = function(term){
+  LibraryApp.allBooks = function(){
     LibraryApp.initializeLayout();
     MyApp.LibraryApp.BookList.showBooks(LibraryApp.Books);
     
@@ -341,13 +347,21 @@ MyApp.LibraryApp = function(){
     
     MyApp.vent.trigger("search:rank");
   };
+
+  LibraryApp.seriesBooks = function(seriesid){
+    LibraryApp.initializeLayout();
+    MyApp.LibraryApp.BookList.showBooks(LibraryApp.Books);
+    MyApp.LibraryApp.CategorySlider.showCategory();
+    
+    MyApp.vent.trigger("search:series",seriesid);
+  };
   
   LibraryApp.defaultSearch = function(){
     LibraryApp.allBooks();
   };
 
   LibraryApp.openBook = function(key){
-    alert(key);
+    //alert(key);
   };
   
   return LibraryApp;

@@ -5,7 +5,8 @@ MyApp.LibraryRouting = function(){
     appRoutes: {
       "": "defaultSearch",
       "search/:searchTerm": "search",
-      "viewer.html?book=:key": "openBook"
+      "viewer.html?book=:key": "openBook",
+      "series/:seriesid": "seriesBooks"
     }
   });
 

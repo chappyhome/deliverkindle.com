@@ -16,14 +16,21 @@
 
   <div id="menu">
     <a href="#" class="js-menu-books">书库</a>
-    <a href="#" class="js-menu-rank">收藏 </a>
-    <a href="#close" class="js-menu-close">关闭</a>
+    <a href="#" class="js-menu-rank">我的书架 </a>
+    <!-- <a href="#close" class="js-menu-close">关闭</a> -->
   </div>
   <div id="content"></div>
   <div id="modal"></div>
-  <div id="wrap"> </div>
+  <div id="footer" class="hotPic"> </div>
   <!-- templates -->
-  <script type="text/template" id="category-template">
+
+  <script type="text/template" id="category-list-template">
+      <div class="JQ-slide">
+        <div class="JQ-slide-nav"><a class="prev" href="javascript:void(0);">&#8249;</a><a class="next" href="javascript:void(0);">&#8250;</a></div>
+        <div class="wrap" id="wrap">
+        <ul class="JQ-slide-content imgList" id="categoryContainer" ></ul>
+        </div>
+     </div>
   </script>
   <script type="text/template" id="library-layout">
     <div id="searchBar">
@@ -64,7 +71,8 @@
   </script>
 
   <script type="text/template" id="slider-template">
-    <a class="item" href="#<%= cagetoryname %>"><%= cagetoryname %></a>
+    <a href="#series/<%= id %>" class="img"><img src="<%= path %>" width="140" height="100" alt="<%= name %>" /></a>
+    <a href="#series/<%= id %>" class="txt"><%= name %></a>
   </script>
 
   <!-- Thirt-Party Libraries (Order matters) -->
@@ -74,7 +82,7 @@
   <script src="./assets/javascript/vendor/backbone.js"></script>
   <script src="./assets/javascript/vendor/backbone.marionette.js"></script>
   <script src="./assets/javascript/vendor/bootstrap-modal.js"></script>
-  <script src="./assets/javascript/jquery.mySlideShow.js"></script>
+  <script src="./assets/javascript/jquery.slide.js"></script>
   
   <!-- Application core (Order matters) -->
   <script type="text/javascript" src="assets/javascript/app.js"></script>
@@ -82,12 +90,12 @@
   <script type="text/javascript" src="assets/javascript/app.library_app.book_list.js"></script>
   <script type="text/javascript" src="assets/javascript/app.library_app.routing.js"></script>
   <script type="text/javascript" src="assets/javascript/app.closer.js"></script>
-  <script type="text/javascript" src="assets/javascript/app.library_app.slider.js"></script>
+  <script type="text/javascript" src="assets/javascript/app.category_app.slider.js"></script>
   <script type="text/javascript" src="assets/javascript/UA-29512090-2.js"></script>
   <script type="text/javascript" src="assets/javascript/LS.js"></script>
 
   <script type="text/javascript">
     MyApp.start();
-  </script>
+    </script>
 </body>
 </html>

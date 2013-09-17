@@ -40,6 +40,8 @@ app.get('/api/get_rank_books_list/:startIndex?/:maxResults?', api.data.getRedisR
 app.get('/api/search_book/:q/:startIndex?/:maxResults?', api.data.searchBook);
 app.get('/cover/:id', api.data.getCoverPath);
 app.get('/reader/:id', api.data.startReader);
+app.get('/api/get_series_list', api.data.getSeriesList);
+app.get('/api/get_series_books/:id', api.data.getSeriesBooksByID);
 
 
 //update data test git test2

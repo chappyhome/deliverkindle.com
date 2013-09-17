@@ -14,8 +14,11 @@ var	CALIBRE_ALL_BOOKS_SET = 'calibre_all_books_sort_set',
 	CALIBRE_ALL_BOOKS_LIST = 'calibre_all_books_list',
 	CALIBRE_ALL_BOOKS_CLICK_HASH = 'calibre_all_books_click_hash',
 	CALIBRE_ALL_BOOKS_CLICK_SORT_SET = 'calibre_all_books_click_sort_set',
+
+	CALIBRE_ALL_SERIES_SET = 'calibre_all_series_set',
+	CALIBRE_SERIES_BOOKS_HASH = 'calibre_series_books_hash',
 	//repository = "/root/all_book_library/Calibre/metadata.db",
-	watchPath = '/root/new_Calibre';
+	watchPath = '/root/new_Calibre',
 	root = '/data/httpd/htdocs/public/';
 
 exports.searchBook = function(req, res) {
@@ -100,7 +103,7 @@ exports.getRedisRankBooks = function(req, res) {
 	redisClient.ZREVRANGE(CALIBRE_ALL_BOOKS_CLICK_SORT_SET, start, endpage, function(err, reply){
 		redisClient.zcard(CALIBRE_ALL_BOOKS_CLICK_SORT_SET, function(err, num){
 			//console.log(reply);
-			var output = {};
+			var output = {},
 				json = [];
 			for(var i = 0; i < reply.length; i++){
 				json.push(JSON.parse(reply[i]));
@@ -140,6 +143,39 @@ exports.startReader = function(req, res) {
 			}
 				
 		});
+	});
+};
+
+exports.getSeriesList = function(req, res) {
+	redisClient.ZRANGE(CALIBRE_ALL_SERIES_SET, 0, -1, function(err, reply){
+		redisClient.zcard(CALIBRE_ALL_SERIES_SET, function(err, num){
+			var output = {},
+				json = [];
+			for(var i = 0; i < reply.length; i++){
+				json.push(JSON.parse(reply[i]));
+			}
+			//output['totalItems'] = num;
+			//output['items'] = json;
+			res.send(json);
+		});
+	});
+};
+
+exports.getSeriesBooksByID = function(req, res) {
+	var seriesid = req.params.id;
+	if(!seriesid) return res.send(404);
+	redisClient.hget(CALIBRE_SERIES_BOOKS_HASH, seriesid, function(err, data){
+		var book_ids = JSON.parse(data);
+		redisClient.hmget(CALIBRE_ALL_BOOKS_HASH, book_ids, function(err, reply){
+			var output = {},
+				json = [];
+			for(var i = 0; i < reply.length; i++){
+				json.push(JSON.parse(reply[i]));
+			}
+			output['totalItems'] = json.length;
+			output['items'] = json;
+			res.send(output);
+	});
 	});
 };
 

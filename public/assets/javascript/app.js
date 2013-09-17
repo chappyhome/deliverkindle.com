@@ -29,7 +29,7 @@ var ModalRegion = Backbone.Marionette.Region.extend({
 MyApp.addRegions({
   content: "#content",
   menu: "#menu",
-  footer:"#wrap",
+  footer:"#footer",
   modal: ModalRegion
 });
 
