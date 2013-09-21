@@ -298,8 +298,10 @@ MyApp.LibraryApp = function(){
             var searchResults = [];
             _.each(res.items, function(item){
               var thumbnail = null;
+
+              var path = (item.path == null)?'assets/images/cover_128_190.jpg':'cover/' + item.path + '/cover_128_190.jpg';
               searchResults[searchResults.length] = new Book({
-                thumbnail: 'cover/' + item.path + '/cover_128_190.jpg',
+                thumbnail: path,
                 title: item.title,
                 subtitle: item.title,
                 description: item.desc,
@@ -357,8 +359,7 @@ MyApp.LibraryApp = function(){
   LibraryApp.seriesBooks = function(seriesid){
     LibraryApp.initializeLayout();
     MyApp.LibraryApp.BookList.showBooks(LibraryApp.Books);
-    MyApp.LibraryApp.CategorySlider.showCategory();
-    
+
     MyApp.vent.trigger("search:series",seriesid);
   };
   

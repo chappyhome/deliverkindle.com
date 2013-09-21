@@ -4,6 +4,7 @@
   <title>读梦</title>
   <link rel="stylesheet" href="assets/css/main.css">
   <link rel="stylesheet" href="assets/css/css.css">
+  <link rel="stylesheet" href="assets/css/leo.css">
   <link rel="stylesheet" href="assets/css/bootstrap-modal.css">
   <link href="http://fonts.googleapis.com/css?family=Sofia" rel="stylesheet" type="text/css">
 </head>
@@ -21,16 +22,23 @@
   </div>
   <div id="content"></div>
   <div id="modal"></div>
-  <div id="footer" class="hotPic"> </div>
+  <div id="footer" class="pikachoose"> </div>
   <!-- templates -->
 
   <script type="text/template" id="category-list-template">
-      <div class="JQ-slide">
-        <div class="JQ-slide-nav"><a class="prev" href="javascript:void(0);">&#8249;</a><a class="next" href="javascript:void(0);">&#8250;</a></div>
-        <div class="wrap" id="wrap">
-        <ul class="JQ-slide-content imgList" id="categoryContainer" ></ul>
-        </div>
-     </div>
+  <div id="leonardo_da_vinci_machines" class="box-slider">
+    <div class="items-wrapper">
+    </div>
+    <div class="scroll-links">
+      <a href="#flying_machines" class="flying_machines">Flight machines</a>
+      <a href="#hydraulic_machines" class="hydraulic_machines">Hydraulic machines</a>
+      <a href="#weapons" class="weapons">Weapons</a>
+    </div>
+    <div class="buttons">
+      <button class="left"></button>
+      <button class="right disabled"></button>
+    </div>
+  </div>
   </script>
   <script type="text/template" id="library-layout">
     <div id="searchBar">
@@ -71,18 +79,19 @@
   </script>
 
   <script type="text/template" id="slider-template">
-    <a href="#series/<%= id %>" class="img"><img src="<%= path %>" width="140" height="100" alt="<%= name %>" /></a>
-    <a href="#series/<%= id %>" class="txt"><%= name %></a>
+    <a href="#series/<%= id %>"><img src="<%= path %>"></a>
+    <div class="fn"><%= name %></div>
   </script>
 
   <!-- Thirt-Party Libraries (Order matters) -->
-  <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+  <script src="./assets/javascript/vendor/jquery.min.js"></script>
   <script src="http://cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
   <script src="./assets/javascript/vendor/underscore.js"></script>
   <script src="./assets/javascript/vendor/backbone.js"></script>
   <script src="./assets/javascript/vendor/backbone.marionette.js"></script>
   <script src="./assets/javascript/vendor/bootstrap-modal.js"></script>
-  <script src="./assets/javascript/jquery.slide.js"></script>
+  <script src="./assets/javascript/vendor/jquery.horizontal_box_slider.js"></script>
+  <script src="./assets/javascript/vendor/horizontal_box_slider.js"></script>
   
   <!-- Application core (Order matters) -->
   <script type="text/javascript" src="assets/javascript/app.js"></script>

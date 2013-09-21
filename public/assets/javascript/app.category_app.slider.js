@@ -10,20 +10,21 @@ MyApp.LibraryApp.CategorySlider = function(){
 
 	var CategoryView = Backbone.Marionette.ItemView.extend({
     	template: "#slider-template",
-    	tagName: 'li'
+    	tagName: 'span',
+      className: 'item'
   	});
 
   var CategoryListView = Backbone.Marionette.CompositeView.extend({
   	template: "#category-list-template",
     itemView: CategoryView,
-    itemViewContainer:"#categoryContainer",
+
     initialize: function(){
         this.collection.fetch();
-    }
+    },
 
-    // appendHtml: function(collectionView, itemView){
-    //   collectionView.$(".wrap").append(itemView.el);
-    // }
+    appendHtml: function(collectionView, itemView){
+      collectionView.$(".items-wrapper").append(itemView.el);
+    }
   });
 
 
@@ -32,16 +33,13 @@ MyApp.LibraryApp.CategorySlider = function(){
      var categoryListView = new CategoryListView({collection: categorys });
      MyApp.footer.show(categoryListView);
      //console.log($(categoryListView.$el).mySlideShow());
-
-     // $(".JQ-slide").Slide({
-     //    effect:"scroolLoop",
-     //    autoPlay:false,
-     //    speed:"normal",
-     //    timer:3000,
-     //    steps:1
-     //  });
+     //categoryListView.ui.slider.bxSlider();
 
   };
+
+  MyApp.addInitializer(function(){
+    CategorySlider.showCategory();
+  });
 
   return CategorySlider;
 }();
