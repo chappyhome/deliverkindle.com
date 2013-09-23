@@ -100,6 +100,8 @@ MyApp.LibraryApp = function(){
 
     getSeriesBooks: function(seriesid){
       var self = this;
+
+      this.searchType = 'series';
       this.fetchSeriesBooks(seriesid, function(books){
         if(books.length < 1){
           MyApp.vent.trigger("search:noResults");
@@ -109,6 +111,8 @@ MyApp.LibraryApp = function(){
           self.reset(books);
         }
       });
+
+      this.previousSearch = seriesid;
 
     },
     
@@ -156,14 +160,30 @@ MyApp.LibraryApp = function(){
             self.page++;
             self.totalItems = res.totalItems;
             var searchResults = [];
+
+            //get localstorage list
+            if('localStorage' in window && window['localStorage'] !== null){
+               var list_key = "CalibreBookIdList";
+               var str = LS.get(list_key);
+               var list = _.isNull(str) ? [] :JSON.parse(str);
+            }else{
+               var list = [];
+            }
+            //end
+            //console.log(list);
+            //console.log(_.indexOf(list, "2016"));
             _.each(res.items, function(item){
               var thumbnail = null;
+              var is_collection = _.indexOf(list, item.id.toString());
               searchResults[searchResults.length] = new Book({
+                id: item.id,
                 thumbnail: 'cover/' + item.path + '/cover_128_190.jpg',
                 title: item.title,
                 subtitle: item.title,
                 description: item.desc,
-                googleId: item.id
+                googleId: item.id,
+                isCollection: is_collection,
+                atCollection: false
               });
             });
             callback(searchResults);
@@ -188,7 +208,7 @@ MyApp.LibraryApp = function(){
            var list_key = "CalibreBookIdList";
            var books_data_prefix = "CalibreBookDetailDataList";
            var str = LS.get(list_key);
-           var list = (str == null) ? [] :  JSON.parse(str);
+           var list = _.isNull(str) ? [] :JSON.parse(str);
            var new_list = _.uniq(list);
            var sub_list = new_list.slice(start, end);
            var totalItems = sub_list.length;
@@ -213,12 +233,14 @@ MyApp.LibraryApp = function(){
           
               if(book_json != null) {
                   searchResults[searchResults.length] = new Book({
-                    //var obj = JSON.parse(item);
-                    thumbnail: 'cover/' + book_json.path + '/cover_128_190.jpg',
+                    id: book_json.id,
+                    thumbnail: book_json.thumbnail,
                     title: book_json.title,
                     subtitle: book_json.title,
                     description: book_json.desc,
-                    googleId: book_json.id
+                    googleId: book_json.id,
+                    isCollection: true,
+                    atCollection: true
                   });
               }
             });
@@ -258,14 +280,29 @@ MyApp.LibraryApp = function(){
             self.page++;
             self.totalItems = res.totalItems;
             var searchResults = [];
+
+            //get localstorage list
+            if('localStorage' in window && window['localStorage'] !== null){
+               var list_key = "CalibreBookIdList";
+               var str = LS.get(list_key);
+               var list = _.isNull(str) ? [] :JSON.parse(str);
+            }else{
+               var list = [];
+            }
+            //end
+
             _.each(res.items, function(item){
               var thumbnail = null;
+              var is_collection = _.indexOf(list, item.id.toString());
               searchResults[searchResults.length] = new Book({
+                id: item.id,
                 thumbnail: 'cover/' + item.path + '/cover_128_190.jpg',
                 title: item.title,
                 subtitle: item.title,
                 description: item.desc,
-                googleId: item.id
+                googleId: item.id,
+                isCollection: is_collection,
+                atCollection: false
               });
             });
             callback(searchResults);
@@ -296,16 +333,32 @@ MyApp.LibraryApp = function(){
           if(res.items){
             self.totalItems = res.totalItems;
             var searchResults = [];
+
+            //get localstorage list
+            if('localStorage' in window && window['localStorage'] !== null){
+               var list_key = "CalibreBookIdList";
+               var str = LS.get(list_key);
+               var list = _.isNull(str) ? [] :JSON.parse(str);
+            }else{
+               var list = [];
+            }
+            //end
+
             _.each(res.items, function(item){
               var thumbnail = null;
 
+              var is_collection = _.indexOf(list, item.id.toString());
+
               var path = (item.path == null)?'assets/images/cover_128_190.jpg':'cover/' + item.path + '/cover_128_190.jpg';
               searchResults[searchResults.length] = new Book({
+                id: item.id,
                 thumbnail: path,
                 title: item.title,
                 subtitle: item.title,
                 description: item.desc,
-                googleId: item.id
+                googleId: item.id,
+                isCollection: is_collection,
+                atCollection: false
               });
             });
             callback(searchResults);
@@ -346,6 +399,7 @@ MyApp.LibraryApp = function(){
     LibraryApp.initializeLayout();
     MyApp.LibraryApp.BookList.showBooks(LibraryApp.Books);
     
+    //console.log(LibraryApp.Books);
     MyApp.vent.trigger("search:allBooks");
   };
 
@@ -369,6 +423,65 @@ MyApp.LibraryApp = function(){
 
   LibraryApp.openBook = function(key){
     //alert(key);
+  };
+
+  LibraryApp.addCollection = function(id){
+    if('localStorage' in window && window['localStorage'] !== null){
+         var list_key = "CalibreBookIdList";
+         var books_data_prefix = "CalibreBookDetailDataList";
+         var str = LS.get(list_key);
+         var list = _.isNull(str) ? [] :JSON.parse(str);
+
+         console.log(list);
+
+         if(_.indexOf(list, id)){
+          list.push(id);
+          LS.set(list_key, JSON.stringify(list));
+         }
+
+         var model = LibraryApp.Books.get(id);
+         var model_str = JSON.stringify(model.toJSON());
+         //console.log(JSON.stringify(model.toJSON()));
+         var key = books_data_prefix + "_" + id;
+         LS.set(key, model_str);
+
+        //  var searchType = LibraryApp.Books.searchType;
+        //  var previousSearch = LibraryApp.Books.previousSearch;
+
+        //  console.log(searchType);
+        //  console.log(previousSearch);
+        //  if(searchType == 'allBooks'){
+        //       MyApp.vent.trigger("search:allBooks");
+        // }else if(this.searchType == 'term'){
+        //       MyApp.vent.trigger("search:term", previousSearch);
+        // }else if(this.searchType == 'series'){
+        //       MyApp.vent.trigger("search:series", previousSearch);
+        // }
+
+         alert('收藏成功!');
+    }
+  };
+
+  LibraryApp.removeCollection = function(id){
+    if('localStorage' in window && window['localStorage'] !== null){
+         var list_key = "CalibreBookIdList";
+         var books_data_prefix = "CalibreBookDetailDataList";
+         var str = LS.get(list_key);
+         var list = _.isNull(str) ? [] :JSON.parse(str);
+
+         var new_list = _.without(list, id);
+         LS.set(list_key, JSON.stringify(new_list));
+
+         var key = books_data_prefix + "_" + id;
+         LS.remove(key);
+
+         LibraryApp.Books.remove(id);
+         MyApp.modal.close();
+
+         if(LibraryApp.Books.length == 0){
+            MyApp.vent.trigger("search:noResults");
+         }
+    }
   };
   
   return LibraryApp;

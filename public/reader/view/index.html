@@ -22,33 +22,12 @@
             "use strict";
             
             document.onreadystatechange = function () {
-              function supports_html5_storage() {
-                try {
-                  return 'localStorage' in window && window['localStorage'] !== null;
-                } catch (e) {
-                  return false;
-                }
-              }
-
               if (document.readyState == "complete") {
                 EPUBJS.VERSION = "0.1.6";
                 
                 EPUBJS.filePath = "js/libs/";
                 EPUBJS.cssPath = "css/";
                 fileStorage.filePath = EPUBJS.filePath;
-
-                if(supports_html5_storage()){
-                  var idkey = "<%= books_id_list %>";
-                  var ids = LS.get(idkey);
-                  var list = (ids == null)?[]:JSON.parse(ids);
-                  list.push(<%= bookid %>);
-                  // var json = JSON.stringify(<%- row %>);
-                  // list.push(json);
-                  LS.set(idkey,JSON.stringify(list));
-
-                  var book_detail_data_id = '<%= books_data_prefix %>' + "_" + <%= bookid %>;
-                  LS.set(book_detail_data_id, JSON.stringify(<%- row %>));
-                }
 
                 EPUBJSR.app.init("<%= epub_path %>");
               }  

@@ -131,14 +131,14 @@ exports.startReader = function(req, res) {
 			if(exists){
 				var unzip_dir = "epub_content/" + row.path + "/";//CALIBRE_ALL_BOOKS_CLICK_HASH
 				//redisClient.hincrby(CALIBRE_ALL_BOOKS_CLICK_HASH, bookid, 1);
-				var list_key = "CalibreBookDetailDataList";
-				var id_key = "CalibreBookIdList";
+				//var list_key = "CalibreBookDetailDataList";
+				//var id_key = "CalibreBookIdList";
 				var dict ={
-					epub_path: unzip_dir,
-					books_id_list: id_key,
-					books_data_prefix: list_key,
-					row: data,
-					bookid: bookid
+					epub_path: unzip_dir
+					//books_id_list: id_key,
+					//books_data_prefix: list_key,
+					//row: data,
+					//bookid: bookid
 				};
 				res.render('index', dict);
 			}else{

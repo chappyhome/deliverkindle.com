@@ -30,9 +30,9 @@
     <div class="items-wrapper">
     </div>
     <div class="scroll-links">
-      <a href="#flying_machines" class="flying_machines">Flight machines</a>
-      <a href="#hydraulic_machines" class="hydraulic_machines">Hydraulic machines</a>
-      <a href="#weapons" class="weapons">Weapons</a>
+      // <a href="#flying_machines" class="flying_machines">Flight machines</a>
+      // <a href="#hydraulic_machines" class="hydraulic_machines">Hydraulic machines</a>
+      // <a href="#weapons" class="weapons">Weapons</a>
     </div>
     <div class="buttons">
       <button class="left"></button>
@@ -71,7 +71,17 @@
     <h1><%= title %></h1>
     <%= (subtitle ? '<h2>'+subtitle+'</h2>' : '') %>
     <p><%= (description ? description : 'No description found') %></p>
-    <b>Read link :</b> <a href="/reader/<%= googleId %>" target="_blank">http://www.deliverkindle.com/reader/<%= googleId %></a>
+     <a href="/reader/<%= googleId %>" target="_blank"><b>阅读</b></a>
+ 
+     <% if(isCollection != -1){%>
+        <% if(atCollection){%>
+            <a href="#remove/<%= googleId %>"><b>删除</b></a>
+        <%}else{%>
+            <b>已收藏</b>
+        <%}%>
+     <%}else{%>
+         <a href="#add/<%= googleId %>"><b>收藏</b></a>
+     <%}%>
   </script>
 
   <script type="text/template" id="close-template">
@@ -79,7 +89,8 @@
   </script>
 
   <script type="text/template" id="slider-template">
-    <a href="#series/<%= id %>"><img src="<%= path %>"></a>
+    <a href="#series/<%= id %>"><img src="<%= path %>" style="width: 60px;
+    height: 90px;"></a>
     <div class="fn"><%= name %></div>
   </script>
 

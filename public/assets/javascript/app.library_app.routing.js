@@ -8,7 +8,9 @@ MyApp.LibraryRouting = function(){
       "viewer.html?book=:key": "openBook",
       "series/:seriesid": "seriesBooks",
       "allbooks*" : "defaultSearch",
-      "mybookshelf": "booksRank"
+      "mybookshelf": "booksRank",
+      "add/:id": "addCollection",
+      "remove/:id": "removeCollection"
     }
   });
 
