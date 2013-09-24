@@ -144,6 +144,7 @@ MyApp.LibraryApp = function(){
     },
     
     fetchBooks: function(callback){
+      MyApp.vent.trigger("search:stop");
       var self = this;
       var query = (this.page * this.maxResults)+'/' + (this.maxResults - 1);
       
@@ -199,7 +200,12 @@ MyApp.LibraryApp = function(){
     },
 
     fetchRankBooks: function(callback){
+      MyApp.vent.trigger("search:stop");
+      //if(this.loading) return true;
+
+      //this.loading = true;
       var self = this;
+      //MyApp.vent.trigger("search:start");
       var query = (this.page * this.maxResults)+'/' + (this.maxResults - 1);
       var start = this.page * this.maxResults;
       var end = start + this.maxResults;
@@ -214,7 +220,7 @@ MyApp.LibraryApp = function(){
            var totalItems = sub_list.length;
 
            console.log(sub_list);
-
+          //MyApp.vent.trigger("search:stop");
           if(totalItems == 0){
             callback([]);
             return [];
@@ -424,6 +430,12 @@ MyApp.LibraryApp = function(){
   LibraryApp.openBook = function(key){
     //alert(key);
   };
+
+  LibraryApp.showCategory = function(){
+    MyApp.LibraryApp.CategorySlider.showCategory();
+  };
+
+ 
 
   LibraryApp.addCollection = function(id){
     if('localStorage' in window && window['localStorage'] !== null){

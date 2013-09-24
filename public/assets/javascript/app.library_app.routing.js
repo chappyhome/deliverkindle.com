@@ -10,7 +10,9 @@ MyApp.LibraryRouting = function(){
       "allbooks*" : "defaultSearch",
       "mybookshelf": "booksRank",
       "add/:id": "addCollection",
-      "remove/:id": "removeCollection"
+      "remove/:id": "removeCollection",
+      "category": "showCategory"
+      //"comment": "showComment"
     }
   });
 

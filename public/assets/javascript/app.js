@@ -39,7 +39,7 @@ MyApp.MenuView = Backbone.Marionette.View.extend({
   events: {
     'click #menu .js-menu-books': 'showLibraryApp',
     'click #menu .js-menu-rank': 'showRankApp',
-    'click #menu .js-menu-close': 'closeApp'
+    'click #mycomment': 'showComment'
   },
   
   showLibraryApp: function(e){
@@ -52,9 +52,10 @@ MyApp.MenuView = Backbone.Marionette.View.extend({
     //MyApp.LibraryApp.booksRank();
   },
   
-  closeApp: function(e){
+  showComment: function(e){
     e.preventDefault();
-    MyApp.Closer.close();
+    $(".ds-thread:hidden").toggle();
+    $(".ds-thread:visible").windowScroll();
   }
 });
 
@@ -62,6 +63,8 @@ MyApp.vent.on("layout:rendered", function(){
   var menu = new MyApp.MenuView();
   MyApp.menu.attachView(menu);
 });
+
+
 
 MyApp.vent.on("routing:started", function(){
   if( ! Backbone.History.started) Backbone.history.start();
