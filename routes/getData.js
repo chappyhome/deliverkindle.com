@@ -1,7 +1,8 @@
 var redis = require("redis"),
     redisClient = redis.createClient(),
     p = require("path"),
-    fs = require("fs");
+    fs = require("fs"),
+    http = require("http");
 
 var elastical = require('elastical'),
 	elasticalclient = new elastical.Client();
@@ -179,6 +180,23 @@ exports.getSeriesBooksByID = function(req, res) {
 			output['items'] = json;
 			res.send(output);
 	});
+	});
+};
+
+
+exports.getDownloadLink = function(req, res) {
+	var url = 'http://api.dbank.com/rest.php?\
+	                  path=/PublicFiles/Blue hills.jpg&\
+	                  clientIp=127.0.0.1&\
+	                  nsp_app=5707429&\
+	                  nsp_fmt=JSON&\
+	                  nsp_key=glubca8udwzk4t6w790bu4mpy3xkcr65';
+	http.get(url, function(json) {
+	    json.setEncoding('utf8');
+	    json.on('data', function(data) {
+	    	console.log(data);
+	    	res.send(data);
+	    });
 	});
 };
 

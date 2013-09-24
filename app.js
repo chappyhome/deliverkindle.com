@@ -42,6 +42,7 @@ app.get('/cover/:id', api.data.getCoverPath);
 app.get('/reader/:id', api.data.startReader);
 app.get('/api/get_series_list', api.data.getSeriesList);
 app.get('/api/get_series_books/:id', api.data.getSeriesBooksByID);
+app.get('/api/get_download_link', api.data.getDownloadLink);
 
 
 //update data test git test2
