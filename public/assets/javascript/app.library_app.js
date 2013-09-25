@@ -40,6 +40,10 @@ MyApp.LibraryApp = function(){
       // remember the previous search
       this.previousSearch = null;
 
+
+      //remember series id 
+      this.previousSeriesId = null;
+
       // the maximum number of results for the previous search
       this.totalItems = null;
     },
@@ -99,6 +103,7 @@ MyApp.LibraryApp = function(){
     },
 
     getSeriesBooks: function(seriesid){
+      this.page = 0;
       var self = this;
 
       this.searchType = 'series';
@@ -112,7 +117,7 @@ MyApp.LibraryApp = function(){
         }
       });
 
-      this.previousSearch = seriesid;
+      this.previousSeriesId = seriesid;
 
     },
     
@@ -136,6 +141,11 @@ MyApp.LibraryApp = function(){
           });
       }else if(this.searchType == 'rank'){
           this.fetchRankBooks(function(books){
+        //console.log(books);
+            self.add(books);
+          });
+      }else if(this.searchType == 'series'){
+          this.fetchSeriesBooks(this.previousSeriesId, function(books){
         //console.log(books);
             self.add(books);
           });
@@ -325,9 +335,11 @@ MyApp.LibraryApp = function(){
 
     fetchSeriesBooks: function(id, callback){      
       var self = this;
+
+      var query = (this.page * this.maxResults)+'/' + (this.maxResults - 1);
       
       $.ajax({
-        url: '/api/get_series_books/' + id,
+        url: '/api/get_series_books/' + id + '/' + query,
         dataType: 'json',
         data: '',
         success: function (res) {
@@ -337,6 +349,7 @@ MyApp.LibraryApp = function(){
             return [];
           }
           if(res.items){
+            self.page++;
             self.totalItems = res.totalItems;
             var searchResults = [];
 

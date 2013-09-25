@@ -85,8 +85,10 @@ exports.getRedisBookByIDs = function(req, res) {
 		redisClient.zcard(CALIBRE_ALL_BOOKS_SET, function(err, num){
 			var output = {};
 				json = [];
-			for(var i = 0; i < reply.length; i++){
-				json.push(JSON.parse(reply[i]));
+			if(reply != null){
+				for(var i = 0; i < reply.length; i++){
+					json.push(JSON.parse(reply[i]));
+				}
 			}
 			output['totalItems'] = num;
 			output['items'] = json;
@@ -101,17 +103,20 @@ exports.getRedisRankBooks = function(req, res) {
 	    maxpage = (req.params.maxResults != undefined || req.params.maxResults != null)?parseInt(req.params.maxResults): 40;
 	    endpage = start + maxpage;
 
-	    console.log(start);
-		console.log(endpage);
+	    //console.log(start);
+		//console.log(endpage);
 	
 	redisClient.ZREVRANGE(CALIBRE_ALL_BOOKS_CLICK_SORT_SET, start, endpage, function(err, reply){
 		redisClient.zcard(CALIBRE_ALL_BOOKS_CLICK_SORT_SET, function(err, num){
 			//console.log(reply);
 			var output = {},
 				json = [];
-			for(var i = 0; i < reply.length; i++){
-				json.push(JSON.parse(reply[i]));
+			if(reply != null){
+				for(var i = 0; i < reply.length; i++){
+					json.push(JSON.parse(reply[i]));
+				}
 			}
+			
 			output['totalItems'] = num;
 			output['items'] = json;
 			res.send(output);
@@ -155,8 +160,10 @@ exports.getSeriesList = function(req, res) {
 		redisClient.zcard(CALIBRE_ALL_SERIES_SET, function(err, num){
 			var output = {},
 				json = [];
-			for(var i = 0; i < reply.length; i++){
-				json.push(JSON.parse(reply[i]));
+			if(reply != null){
+				for(var i = 0; i < reply.length; i++){
+					json.push(JSON.parse(reply[i]));
+				}
 			}
 			//output['totalItems'] = num;
 			//output['items'] = json;
@@ -168,13 +175,24 @@ exports.getSeriesList = function(req, res) {
 exports.getSeriesBooksByID = function(req, res) {
 	var seriesid = req.params.id;
 	if(!seriesid) return res.send(404);
+	var start = (req.params.startIndex != undefined || req.params.startIndex != null)?parseInt(req.params.startIndex): 0;;
+	    maxpage = (req.params.maxResults != undefined || req.params.maxResults != null)?parseInt(req.params.maxResults): 40;
+	    endpage = start + maxpage;
 	redisClient.hget(CALIBRE_SERIES_BOOKS_HASH, seriesid, function(err, data){
 		var book_ids = JSON.parse(data);
-		redisClient.hmget(CALIBRE_ALL_BOOKS_HASH, book_ids, function(err, reply){
+		//console.log(book_ids);
+		var new_book_ids = book_ids.slice(start, endpage);
+		//console.log(start);
+		//console.log(endpage);
+		//console.log(new_book_ids);
+		redisClient.hmget(CALIBRE_ALL_BOOKS_HASH, new_book_ids, function(err, reply){
 			var output = {},
 				json = [];
-			for(var i = 0; i < reply.length; i++){
-				json.push(JSON.parse(reply[i]));
+			//console.log(reply);
+			if(reply != null){
+				for(var i = 0; i < reply.length; i++){
+					json.push(JSON.parse(reply[i]));
+				}
 			}
 			output['totalItems'] = json.length;
 			output['items'] = json;
