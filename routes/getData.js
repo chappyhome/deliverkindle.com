@@ -1,11 +1,17 @@
 var redis = require("redis"),
     redisClient = redis.createClient(),
     p = require("path"),
-    fs = require("fs"),
-    http = require("http");
+    fs = require("fs");
 
 var elastical = require('elastical'),
 	elasticalclient = new elastical.Client();
+
+var nsp = require('nspclient'),
+    nspclient = new nsp.NSPClient({
+	    appid: '5707429',
+	    appsecret: 'glubca8udwzk4t6w790bu4mpy3xkcr65',
+	    log: '/data/httpd/log/log.txt'
+	});
 
 
 
@@ -203,18 +209,16 @@ exports.getSeriesBooksByID = function(req, res) {
 
 
 exports.getDownloadLink = function(req, res) {
-	var url = 'http://api.dbank.com/rest.php?\
-	                  path=/PublicFiles/Blue hills.jpg&\
-	                  clientIp=127.0.0.1&\
-	                  nsp_app=5707429&\
-	                  nsp_fmt=JSON&\
-	                  nsp_key=glubca8udwzk4t6w790bu4mpy3xkcr65';
-	http.get(url, function(json) {
-	    json.setEncoding('utf8');
-	    json.on('data', function(data) {
-	    	console.log(data);
-	    	res.send(data);
-	    });
+	var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+	var param = {'path':'/PublicFiles/nsp.zip', 'clientIp':ip};
+	nspclient.service('nsp.vfs.link.getDirectUrl',param,function(data){
+		//var json = JSON.parse(data);
+		if(data.retcode == '0000'){
+			
+			res.redirect(data.url);
+		}
+    	console.log(data);
+    	console.log(ip);
 	});
 };
 
