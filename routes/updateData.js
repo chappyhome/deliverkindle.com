@@ -1,3 +1,44 @@
+var CALIBRE_ALL_BOOKS_SET = 'calibre_all_books_sort_set',
+	repository = "/data/httpd/data/metadata.db";
+var redis = require("redis"),
+    redisClient = redis.createClient(),
+    fs = require("fs"),
+    _=require('underscore'),
+    sqlite3 = require("sqlite3").verbose();
+
+exports.updateAllBooksClickToSqlite = function() {
+	if(!exists) {
+  		console.log("Creating DB file.");
+  		fs.openSync(repository, "w");
+	}
+	var exists = fs.existsSync(repository);
+	var db = new sqlite3.Database(repository);
+	db.serialize(function() {
+		sql = 'create table if not exists calibre_id_click (id INTEGER PRIMARY KEY, click INTEGER)';
+	    db.run(sql);
+  		var stmt = db.prepare("INSERT OR REPLACE INTO calibre_id_click VALUES (?, ?)");
+  		redisClient.zrange(CALIBRE_ALL_BOOKS_SET, 0, -1, 'WITHSCORES', function(err, ids){
+  			var lists = _.groupBy(ids, function(a, b){
+  				return Math.floor(b/2);
+			});
+			lists = _.toArray(lists);
+			_.each(lists, function(pair){
+				//console.log(pair[0] + ":" + pair[1]);
+				stmt.run([pair[0], pair[1]]);
+			});
+  			stmt.finalize();
+  		});
+	});
+	db.close();
+};
+
+	/*CALIBRE_ALL_BOOKS_HASH = 'calibre_all_books_hash',
+	CALIBRE_EPUB_PATH_HASH = 'calibre_epub_path_hash',
+	CALIBRE_ALL_BOOKS_LIST = 'calibre_all_books_list',
+	CALIBRE_ALL_BOOKS_CLICK_HASH = 'calibre_all_books_click_hash',
+	CALIBRE_ALL_BOOKS_CLICK_SORT_SET = 'calibre_all_books_click_sort_set',
+	repository = "/root/all_book_library/Calibre/metadata.db",
+	watchPath = '/root/all_book_library/Calibre';
 var redis = require("redis"),
     redisClient = redis.createClient(),
     parseString = require('xml2js').Parser().parseString,
@@ -5,6 +46,7 @@ var redis = require("redis"),
     fs = require("fs"),
     sqlite3 = require("sqlite3"),
     exec = require('child_process').exec;
+
 var ElasticSearchClient = require('elasticsearchclient'),
 	serverOptions = {
 	    host: 'localhost',
@@ -14,21 +56,6 @@ var ElasticSearchClient = require('elasticsearchclient'),
 
 var elastical = require('elastical');
 var elasticalclient = new elastical.Client();
-
-var PAGE_PREFIX = 'calibre_page_',
-	CALIBRE_LIBRARY_TOTAL = 'calibre_library_total',
-	BASE_DATA_URL = 'http://www.deliverkindle.com:8080',
-	PAGE_BOOK_NUMBER = 40,
-	DISPLAY_CATEGORY = ['Rating','News','Series'],
-
-	CALIBRE_ALL_BOOKS_SET = 'calibre_all_books_sort_set',
-	CALIBRE_ALL_BOOKS_HASH = 'calibre_all_books_hash',
-	CALIBRE_EPUB_PATH_HASH = 'calibre_epub_path_hash',
-	CALIBRE_ALL_BOOKS_LIST = 'calibre_all_books_list',
-	CALIBRE_ALL_BOOKS_CLICK_HASH = 'calibre_all_books_click_hash',
-	CALIBRE_ALL_BOOKS_CLICK_SORT_SET = 'calibre_all_books_click_sort_set',
-	repository = "/root/all_book_library/Calibre/metadata.db",
-	watchPath = '/root/all_book_library/Calibre';
 
 
 exports.updateSqliteToHashAndSet = function() {
@@ -108,4 +135,5 @@ exports.updateAllBooksClickSet = function() {
 		}
 	});
 
-};
+};*/
+

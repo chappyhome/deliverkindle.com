@@ -185,11 +185,13 @@ MyApp.LibraryApp = function(){
             //console.log(_.indexOf(list, "2016"));
             _.each(res.items, function(item){
               var thumbnail = null;
+              if(item == null) return;
               var is_collection = _.indexOf(list, item.id.toString());
               searchResults[searchResults.length] = new Book({
                 id: item.id,
                 thumbnail: 'cover/' + item.path + '/cover_128_190.jpg',
                 title: item.title,
+                author: item.author,
                 subtitle: item.title,
                 description: item.desc,
                 googleId: item.id,
@@ -242,6 +244,7 @@ MyApp.LibraryApp = function(){
             var searchResults = [];
             _.each(sub_list, function(item){
                var thumbnail = null;
+               if(item == null) return;
                console.log(item);
                var key = books_data_prefix + "_" + item;
                var book_detail = LS.get(key);
@@ -252,6 +255,7 @@ MyApp.LibraryApp = function(){
                     id: book_json.id,
                     thumbnail: book_json.thumbnail,
                     title: book_json.title,
+                    author: book_json.author,
                     subtitle: book_json.title,
                     description: book_json.desc,
                     googleId: book_json.id,
@@ -309,11 +313,13 @@ MyApp.LibraryApp = function(){
 
             _.each(res.items, function(item){
               var thumbnail = null;
+              if(item == null) return;
               var is_collection = _.indexOf(list, item.id.toString());
               searchResults[searchResults.length] = new Book({
                 id: item.id,
                 thumbnail: 'cover/' + item.path + '/cover_128_190.jpg',
                 title: item.title,
+                author: item.author,
                 subtitle: item.title,
                 description: item.desc,
                 googleId: item.id,
@@ -366,6 +372,8 @@ MyApp.LibraryApp = function(){
             _.each(res.items, function(item){
               var thumbnail = null;
 
+              if(item == null) return;
+
               var is_collection = _.indexOf(list, item.id.toString());
 
               var path = (item.path == null)?'assets/images/cover_128_190.jpg':'cover/' + item.path + '/cover_128_190.jpg';
@@ -373,6 +381,7 @@ MyApp.LibraryApp = function(){
                 id: item.id,
                 thumbnail: path,
                 title: item.title,
+                author: item.author,
                 subtitle: item.title,
                 description: item.desc,
                 googleId: item.id,

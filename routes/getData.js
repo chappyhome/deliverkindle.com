@@ -89,16 +89,26 @@ exports.getRedisBookByIDs = function(req, res) {
 	
 	redisClient.zrevrange(CALIBRE_ALL_BOOKS_SET, start, endpage, function(err, reply){//ZREVRANGE
 		redisClient.zcard(CALIBRE_ALL_BOOKS_SET, function(err, num){
-			var output = {};
-				json = [];
+			var book_ids = [];
 			if(reply != null){
 				for(var i = 0; i < reply.length; i++){
-					json.push(JSON.parse(reply[i]));
+					book_ids.push(parseInt(reply[i]));
 				}
 			}
-			output['totalItems'] = num;
-			output['items'] = json;
-			res.send(output);
+			redisClient.hmget(CALIBRE_ALL_BOOKS_HASH, book_ids, function(err, reply){
+				var output = {},
+					json = [];
+				//console.log(reply);
+				if(reply != null){
+					for(var i = 0; i < reply.length; i++){
+						json.push(JSON.parse(reply[i]));
+					}
+				}
+				output['totalItems'] = num;
+				output['items'] = json;
+				res.send(output);
+			});
+			
 		});
 	});
 
@@ -142,7 +152,7 @@ exports.startReader = function(req, res) {
 		fs.exists(real_epub_path, function(exists) {
 			if(exists){
 				var unzip_dir = "epub_content/" + row.path + "/";//CALIBRE_ALL_BOOKS_CLICK_HASH
-				//redisClient.hincrby(CALIBRE_ALL_BOOKS_CLICK_HASH, bookid, 1);
+				redisClient.ZINCRBY(CALIBRE_ALL_BOOKS_SET, 1, bookid);
 				//var list_key = "CalibreBookDetailDataList";
 				//var id_key = "CalibreBookIdList";
 				var dict ={
@@ -180,6 +190,7 @@ exports.getSeriesList = function(req, res) {
 
 exports.getSeriesBooksByID = function(req, res) {
 	var seriesid = req.params.id;
+	//console.log(seriesid);
 	if(!seriesid) return res.send(404);
 	var start = (req.params.startIndex != undefined || req.params.startIndex != null)?parseInt(req.params.startIndex): 0;;
 	    maxpage = (req.params.maxResults != undefined || req.params.maxResults != null)?parseInt(req.params.maxResults): 40;
@@ -187,6 +198,12 @@ exports.getSeriesBooksByID = function(req, res) {
 	redisClient.hget(CALIBRE_SERIES_BOOKS_HASH, seriesid, function(err, data){
 		var book_ids = JSON.parse(data);
 		//console.log(book_ids);
+
+		if(book_ids == null) {
+			console.log('book_ids is null in getSeriesBooksByID')
+			res.send({});
+			return;
+		}
 		var new_book_ids = book_ids.slice(start, endpage);
 		//console.log(start);
 		//console.log(endpage);
@@ -203,7 +220,7 @@ exports.getSeriesBooksByID = function(req, res) {
 			output['totalItems'] = json.length;
 			output['items'] = json;
 			res.send(output);
-	});
+		});
 	});
 };
 
