@@ -41,7 +41,7 @@ app.get('/api/search_book/:q/:startIndex?/:maxResults?', api.data.searchBook);
 app.get('/cover/:id', api.data.getCoverPath);
 app.get('/reader/:id', api.data.startReader);
 app.get('/api/get_series_list', api.data.getSeriesList);
-app.get('/api/get_series_books/:id', api.data.getSeriesBooksByID);
+app.get('/api/get_series_books/:id/:startIndex?/:maxResults?', api.data.getSeriesBooksByID);
 app.get('/api/get_download_link', api.data.getDownloadLink);
 
 
@@ -50,6 +50,7 @@ app.get('/api/get_download_link', api.data.getDownloadLink);
 setTimeout(api.update.updateSqliteToHashAndSet, 300000);
 setTimeout(api.update.updateConvertCover, 80000);
 setTimeout(api.update.updateAllBooksClickSet, 60000);*/
+setInterval(api.update.updateAllBooksClickToSqlite, 3600000);
  
 app.listen(app.get('port'));
 console.log('Listening on port 80...');

@@ -1,11 +1,17 @@
 var redis = require("redis"),
     redisClient = redis.createClient(),
     p = require("path"),
-    fs = require("fs"),
-    http = require("http");
+    fs = require("fs");
 
 var elastical = require('elastical'),
 	elasticalclient = new elastical.Client();
+
+var nsp = require('nspclient'),
+    nspclient = new nsp.NSPClient({
+	    appid: '5707429',
+	    appsecret: 'glubca8udwzk4t6w790bu4mpy3xkcr65',
+	    log: '/data/httpd/log/log.txt'
+	});
 
 
 
@@ -83,14 +89,26 @@ exports.getRedisBookByIDs = function(req, res) {
 	
 	redisClient.zrevrange(CALIBRE_ALL_BOOKS_SET, start, endpage, function(err, reply){//ZREVRANGE
 		redisClient.zcard(CALIBRE_ALL_BOOKS_SET, function(err, num){
-			var output = {};
-				json = [];
-			for(var i = 0; i < reply.length; i++){
-				json.push(JSON.parse(reply[i]));
+			var book_ids = [];
+			if(reply != null){
+				for(var i = 0; i < reply.length; i++){
+					book_ids.push(parseInt(reply[i]));
+				}
 			}
-			output['totalItems'] = num;
-			output['items'] = json;
-			res.send(output);
+			redisClient.hmget(CALIBRE_ALL_BOOKS_HASH, book_ids, function(err, reply){
+				var output = {},
+					json = [];
+				//console.log(reply);
+				if(reply != null){
+					for(var i = 0; i < reply.length; i++){
+						json.push(JSON.parse(reply[i]));
+					}
+				}
+				output['totalItems'] = num;
+				output['items'] = json;
+				res.send(output);
+			});
+			
 		});
 	});
 
@@ -101,17 +119,20 @@ exports.getRedisRankBooks = function(req, res) {
 	    maxpage = (req.params.maxResults != undefined || req.params.maxResults != null)?parseInt(req.params.maxResults): 40;
 	    endpage = start + maxpage;
 
-	    console.log(start);
-		console.log(endpage);
+	    //console.log(start);
+		//console.log(endpage);
 	
 	redisClient.ZREVRANGE(CALIBRE_ALL_BOOKS_CLICK_SORT_SET, start, endpage, function(err, reply){
 		redisClient.zcard(CALIBRE_ALL_BOOKS_CLICK_SORT_SET, function(err, num){
 			//console.log(reply);
 			var output = {},
 				json = [];
-			for(var i = 0; i < reply.length; i++){
-				json.push(JSON.parse(reply[i]));
+			if(reply != null){
+				for(var i = 0; i < reply.length; i++){
+					json.push(JSON.parse(reply[i]));
+				}
 			}
+			
 			output['totalItems'] = num;
 			output['items'] = json;
 			res.send(output);
@@ -131,7 +152,7 @@ exports.startReader = function(req, res) {
 		fs.exists(real_epub_path, function(exists) {
 			if(exists){
 				var unzip_dir = "epub_content/" + row.path + "/";//CALIBRE_ALL_BOOKS_CLICK_HASH
-				//redisClient.hincrby(CALIBRE_ALL_BOOKS_CLICK_HASH, bookid, 1);
+				redisClient.ZINCRBY(CALIBRE_ALL_BOOKS_SET, 1, bookid);
 				//var list_key = "CalibreBookDetailDataList";
 				//var id_key = "CalibreBookIdList";
 				var dict ={
@@ -155,8 +176,10 @@ exports.getSeriesList = function(req, res) {
 		redisClient.zcard(CALIBRE_ALL_SERIES_SET, function(err, num){
 			var output = {},
 				json = [];
-			for(var i = 0; i < reply.length; i++){
-				json.push(JSON.parse(reply[i]));
+			if(reply != null){
+				for(var i = 0; i < reply.length; i++){
+					json.push(JSON.parse(reply[i]));
+				}
 			}
 			//output['totalItems'] = num;
 			//output['items'] = json;
@@ -167,36 +190,52 @@ exports.getSeriesList = function(req, res) {
 
 exports.getSeriesBooksByID = function(req, res) {
 	var seriesid = req.params.id;
+	//console.log(seriesid);
 	if(!seriesid) return res.send(404);
+	var start = (req.params.startIndex != undefined || req.params.startIndex != null)?parseInt(req.params.startIndex): 0;;
+	    maxpage = (req.params.maxResults != undefined || req.params.maxResults != null)?parseInt(req.params.maxResults): 40;
+	    endpage = start + maxpage;
 	redisClient.hget(CALIBRE_SERIES_BOOKS_HASH, seriesid, function(err, data){
 		var book_ids = JSON.parse(data);
-		redisClient.hmget(CALIBRE_ALL_BOOKS_HASH, book_ids, function(err, reply){
+		//console.log(book_ids);
+
+		if(book_ids == null) {
+			console.log('book_ids is null in getSeriesBooksByID')
+			res.send({});
+			return;
+		}
+		var new_book_ids = book_ids.slice(start, endpage);
+		//console.log(start);
+		//console.log(endpage);
+		//console.log(new_book_ids);
+		redisClient.hmget(CALIBRE_ALL_BOOKS_HASH, new_book_ids, function(err, reply){
 			var output = {},
 				json = [];
-			for(var i = 0; i < reply.length; i++){
-				json.push(JSON.parse(reply[i]));
+			//console.log(reply);
+			if(reply != null){
+				for(var i = 0; i < reply.length; i++){
+					json.push(JSON.parse(reply[i]));
+				}
 			}
 			output['totalItems'] = json.length;
 			output['items'] = json;
 			res.send(output);
-	});
+		});
 	});
 };
 
 
 exports.getDownloadLink = function(req, res) {
-	var url = 'http://api.dbank.com/rest.php?\
-	                  path=/PublicFiles/Blue hills.jpg&\
-	                  clientIp=127.0.0.1&\
-	                  nsp_app=5707429&\
-	                  nsp_fmt=JSON&\
-	                  nsp_key=glubca8udwzk4t6w790bu4mpy3xkcr65';
-	http.get(url, function(json) {
-	    json.setEncoding('utf8');
-	    json.on('data', function(data) {
-	    	console.log(data);
-	    	res.send(data);
-	    });
+	var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+	var param = {'path':'/PublicFiles/nsp.zip', 'clientIp':ip};
+	nspclient.service('nsp.vfs.link.getDirectUrl',param,function(data){
+		//var json = JSON.parse(data);
+		if(data.retcode == '0000'){
+			
+			res.redirect(data.url);
+		}
+    	console.log(data);
+    	console.log(ip);
 	});
 };
 

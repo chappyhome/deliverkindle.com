@@ -40,6 +40,10 @@ MyApp.LibraryApp = function(){
       // remember the previous search
       this.previousSearch = null;
 
+
+      //remember series id 
+      this.previousSeriesId = null;
+
       // the maximum number of results for the previous search
       this.totalItems = null;
     },
@@ -99,6 +103,7 @@ MyApp.LibraryApp = function(){
     },
 
     getSeriesBooks: function(seriesid){
+      this.page = 0;
       var self = this;
 
       this.searchType = 'series';
@@ -112,7 +117,7 @@ MyApp.LibraryApp = function(){
         }
       });
 
-      this.previousSearch = seriesid;
+      this.previousSeriesId = seriesid;
 
     },
     
@@ -136,6 +141,11 @@ MyApp.LibraryApp = function(){
           });
       }else if(this.searchType == 'rank'){
           this.fetchRankBooks(function(books){
+        //console.log(books);
+            self.add(books);
+          });
+      }else if(this.searchType == 'series'){
+          this.fetchSeriesBooks(this.previousSeriesId, function(books){
         //console.log(books);
             self.add(books);
           });
@@ -175,11 +185,13 @@ MyApp.LibraryApp = function(){
             //console.log(_.indexOf(list, "2016"));
             _.each(res.items, function(item){
               var thumbnail = null;
+              if(item == null) return;
               var is_collection = _.indexOf(list, item.id.toString());
               searchResults[searchResults.length] = new Book({
                 id: item.id,
                 thumbnail: 'cover/' + item.path + '/cover_128_190.jpg',
                 title: item.title,
+                author: item.author,
                 subtitle: item.title,
                 description: item.desc,
                 googleId: item.id,
@@ -232,6 +244,7 @@ MyApp.LibraryApp = function(){
             var searchResults = [];
             _.each(sub_list, function(item){
                var thumbnail = null;
+               if(item == null) return;
                console.log(item);
                var key = books_data_prefix + "_" + item;
                var book_detail = LS.get(key);
@@ -242,6 +255,7 @@ MyApp.LibraryApp = function(){
                     id: book_json.id,
                     thumbnail: book_json.thumbnail,
                     title: book_json.title,
+                    author: book_json.author,
                     subtitle: book_json.title,
                     description: book_json.desc,
                     googleId: book_json.id,
@@ -299,11 +313,13 @@ MyApp.LibraryApp = function(){
 
             _.each(res.items, function(item){
               var thumbnail = null;
+              if(item == null) return;
               var is_collection = _.indexOf(list, item.id.toString());
               searchResults[searchResults.length] = new Book({
                 id: item.id,
                 thumbnail: 'cover/' + item.path + '/cover_128_190.jpg',
                 title: item.title,
+                author: item.author,
                 subtitle: item.title,
                 description: item.desc,
                 googleId: item.id,
@@ -325,9 +341,11 @@ MyApp.LibraryApp = function(){
 
     fetchSeriesBooks: function(id, callback){      
       var self = this;
+
+      var query = (this.page * this.maxResults)+'/' + (this.maxResults - 1);
       
       $.ajax({
-        url: '/api/get_series_books/' + id,
+        url: '/api/get_series_books/' + id + '/' + query,
         dataType: 'json',
         data: '',
         success: function (res) {
@@ -337,6 +355,7 @@ MyApp.LibraryApp = function(){
             return [];
           }
           if(res.items){
+            self.page++;
             self.totalItems = res.totalItems;
             var searchResults = [];
 
@@ -353,6 +372,8 @@ MyApp.LibraryApp = function(){
             _.each(res.items, function(item){
               var thumbnail = null;
 
+              if(item == null) return;
+
               var is_collection = _.indexOf(list, item.id.toString());
 
               var path = (item.path == null)?'assets/images/cover_128_190.jpg':'cover/' + item.path + '/cover_128_190.jpg';
@@ -360,6 +381,7 @@ MyApp.LibraryApp = function(){
                 id: item.id,
                 thumbnail: path,
                 title: item.title,
+                author: item.author,
                 subtitle: item.title,
                 description: item.desc,
                 googleId: item.id,
