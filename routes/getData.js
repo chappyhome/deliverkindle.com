@@ -226,16 +226,23 @@ exports.getSeriesBooksByID = function(req, res) {
 
 
 exports.getDownloadLink = function(req, res) {
-	var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-	var param = {'path':'/PublicFiles/nsp.zip', 'clientIp':ip};
-	nspclient.service('nsp.vfs.link.getDirectUrl',param,function(data){
-		//var json = JSON.parse(data);
-		if(data.retcode == '0000'){
-			
-			res.redirect(data.url);
-		}
-    	console.log(data);
-    	console.log(ip);
+	var bookid = req.params.id;
+	if(!bookid) return res.send(404);
+	redisClient.hget(CALIBRE_ALL_BOOKS_HASH, bookid, function(err, data){
+		var row = JSON.parse(data);
+		var path = '/PublicFiles/NEWBOOK/' + row.path + '/' + row.name + '.epub';
+		var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+		var param = {'path':path, 'clientIp':ip};
+		nspclient.service('nsp.vfs.link.getDirectUrl',param,function(data){
+			//var json = JSON.parse(data);
+			if(data.retcode == '0000'){
+				
+				res.redirect(data.url);
+			}
+	    	console.log(data);
+	    	console.log(ip);
+		});
 	});
+	
 };
 

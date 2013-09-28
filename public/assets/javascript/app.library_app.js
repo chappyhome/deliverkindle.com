@@ -196,7 +196,8 @@ MyApp.LibraryApp = function(){
                 description: item.desc,
                 googleId: item.id,
                 isCollection: is_collection,
-                atCollection: false
+                atCollection: false,
+                download: '/api/get_download_link/' + item.id
               });
             });
             callback(searchResults);
@@ -260,7 +261,8 @@ MyApp.LibraryApp = function(){
                     description: book_json.desc,
                     googleId: book_json.id,
                     isCollection: true,
-                    atCollection: true
+                    atCollection: true,
+                    download: '/api/get_download_link/' + item.id
                   });
               }
             });
@@ -324,7 +326,8 @@ MyApp.LibraryApp = function(){
                 description: item.desc,
                 googleId: item.id,
                 isCollection: is_collection,
-                atCollection: false
+                atCollection: false,
+                download: '/api/get_download_link/' + item.id
               });
             });
             callback(searchResults);
@@ -386,7 +389,8 @@ MyApp.LibraryApp = function(){
                 description: item.desc,
                 googleId: item.id,
                 isCollection: is_collection,
-                atCollection: false
+                atCollection: false,
+                download: '/api/get_download_link/' + item.id
               });
             });
             callback(searchResults);
