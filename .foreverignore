@@ -1,0 +1,5 @@
+node_modules/**
+public/**
+.gitignore
+package.json
+README.md
