@@ -9,7 +9,7 @@ var express = require('express'),
 var app = express();
  
 app.configure(function () {
-	app.set('port', process.env.PORT || 80);
+	app.set('port', process.env.PORT || 8080);
 	app.engine('.html', require('ejs').__express);
 	app.set('views', path.join(__dirname, 'public/reader/view'));
 	app.set('view engine', 'html');
@@ -53,4 +53,4 @@ setTimeout(api.update.updateAllBooksClickSet, 60000);*/
 //setInterval(api.update.updateAllBooksClickToSqlite, 3600000);
  
 app.listen(app.get('port'));
-console.log('Listening on port 80...');
+console.log('Listening on port 8080...');
