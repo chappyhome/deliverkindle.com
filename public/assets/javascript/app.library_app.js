@@ -258,7 +258,7 @@ MyApp.LibraryApp = function(){
                     title: book_json.title,
                     author: book_json.author,
                     subtitle: book_json.title,
-                    description: book_json.desc,
+                    description: book_json.description,
                     googleId: book_json.id,
                     isCollection: true,
                     atCollection: true,
