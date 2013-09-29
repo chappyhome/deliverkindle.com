@@ -21,6 +21,7 @@ var	CALIBRE_ALL_BOOKS_SET = 'calibre_all_books_sort_set',
 	CALIBRE_ALL_BOOKS_LIST = 'calibre_all_books_list',
 	CALIBRE_ALL_BOOKS_CLICK_HASH = 'calibre_all_books_click_hash',
 	CALIBRE_ALL_BOOKS_CLICK_SORT_SET = 'calibre_all_books_click_sort_set',
+	CALIBRE_ALL_BOOKS_DOWNLOAD_HASH = 'calibre_all_books_download_hash',
 
 	CALIBRE_ALL_SERIES_SET = 'calibre_all_series_set',
 	CALIBRE_SERIES_BOOKS_HASH = 'calibre_series_books_hash',
@@ -236,7 +237,7 @@ exports.getDownloadLink = function(req, res) {
 		nspclient.service('nsp.vfs.link.getDirectUrl',param,function(data){
 			//var json = JSON.parse(data);
 			if(data.retcode == '0000'){
-				
+				redisClient.hset(CALIBRE_ALL_BOOKS_DOWNLOAD_HASH, ip, path);
 				res.redirect(data.url);
 			}
 	    	console.log(data);
